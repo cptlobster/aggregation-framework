@@ -3,8 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/aggregation_framework.iml" filepath="$PROJECT_DIR$/.idea/modules/aggregation_framework.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/aggregation_framework_core.iml" filepath="$PROJECT_DIR$/.idea/modules/aggregation_framework_core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/aggregation_framework_core.aggregation_framework_core-build.iml" filepath="$PROJECT_DIR$/.idea/modules/aggregation_framework_core.aggregation_framework_core-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework-build.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework-build.iml" />
     </modules>
   </component>
 </project>

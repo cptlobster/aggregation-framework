@@ -5,7 +5,7 @@ ThisBuild / scalaVersion := "2.13.16"
 // Core project
 lazy val root = (project in file("."))
   .settings(
-    name := "aggregation_framework_core",
+    name := "aggregation_framework",
     idePackagePrefix := Some("dev.cptlobster.aggregation_framework"),
   )
 
