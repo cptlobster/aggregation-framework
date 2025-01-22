@@ -14,6 +14,8 @@
 package dev.cptlobster.aggregation_framework
 package collector
 
+import navigator.JsonNavigator
+
 import org.json4s._
 import org.json4s.native.JsonMethods._
 
@@ -42,9 +44,17 @@ trait JsonCollector[T] extends SttpCollector[T] {
 
   /**
    * Find a specific [[JValue]] in your source tree. By default, returns the JSON output as-is, but you can override it
+   * to target specific JSON values. There is a version of this function that uses [[JsonNavigator]]s to parse values.
+   * @param value the original JSON tree
+   * @return the JSON tree that you targeted with this function
+   */
+  def find(value: JValue): JValue = find(JsonNavigator(value)).get
+
+  /**
+   * Find a specific [[JValue]] in your source tree. By default, returns the JSON output as-is, but you can override it
    * to target specific JSON values.
    * @param value the original JSON tree
    * @return the JSON tree that you targeted with this function
    */
-  def find(value: JValue): JValue = value
+  def find(value: JsonNavigator): JsonNavigator = value
 }
