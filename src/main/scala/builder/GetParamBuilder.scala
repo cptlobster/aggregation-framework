@@ -7,5 +7,7 @@ case class GetParamBuilder(map: Map[String, String]) extends MapBuilder {
     GetParamBuilder(new_map)
   }
 
-  override def generate: String = { map.iterator.map(kvp => s"${kvp._1}=${kvp._2}").mkString("?", "&", "")}
+  override def generate(endpoint: String): String = {
+    endpoint ++ map.iterator.map(kvp => s"${kvp._1}=${kvp._2}").mkString("?", "&", "")
+  }
 }
