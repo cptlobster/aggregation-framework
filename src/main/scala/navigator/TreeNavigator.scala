@@ -24,7 +24,7 @@ package navigator
 abstract class TreeNavigator[T, Q] {
   val tree: T
   /**
-   * Get the first element match from a document tree that match the query. This will throw an exception if no such
+   * Get the first element from a document tree that matches the query. This will throw an exception if no such
    * element exists.
    * @param query The query to execute against the document tree
    * @return The first element to match the query
@@ -34,7 +34,7 @@ abstract class TreeNavigator[T, Q] {
     case None => throw new Exception(s"Element not found matching query: $query")
   }
   /**
-   * Get all elements from a document tree that match the query. This will throw an exception if no such elements exist.
+   * Get the first element from a document tree that matches the query.
    *
    * @param query The query to execute against the document tree
    * @return All elements that match the query
@@ -50,9 +50,7 @@ abstract class TreeNavigator[T, Q] {
    * @return All elements that match the query
    */
   def >>(query: Q): Option[TreeNavigator[T, Q]] = {
-    try {
-      Some(this !>> query)
-    }
+    try { Some(this !>> query) }
     catch {
       case _: Exception => None
     }
@@ -64,17 +62,15 @@ abstract class TreeNavigator[T, Q] {
    * @return All elements that match the query.
    */
   def :>>(query: Q): Option[List[TreeNavigator[T, Q]]] = {
-    try {
-      Some(this !:>> query)
-    }
+    try { Some(this !:>> query) }
     catch {
       case _: Exception => None
     }
   }
 
   /**
-   * Extract the original class element.
+   * Get the original value.
    * @return The current tree element
    */
-  def extract: T = this.tree
+  def get: T = this.tree
 }
