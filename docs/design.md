@@ -34,7 +34,7 @@ component traits / classes.
 ### Navigator
 
 Each library used in this project has its own unique method of navigating its data structures. The navigator classes
-attempt to standardize these into a single monadic format.
+attempt to standardize these into a single format.
 
 ### Query Builder
 
