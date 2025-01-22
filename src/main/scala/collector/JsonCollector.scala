@@ -27,7 +27,7 @@ import org.json4s.native.JsonMethods._
  * @tparam T The expected final type of the data. You will need to implement a [[convert]] function that can handle this
  *           data.
  */
-trait JsonCollector[T] extends Collector[T] {
+trait JsonCollector[T] extends SttpCollector[T] {
   implicit val formats: Formats = DefaultFormats
 
   /**

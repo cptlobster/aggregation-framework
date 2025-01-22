@@ -14,25 +14,22 @@
 package dev.cptlobster.aggregation_framework
 package collector
 
-import net.ruippeixotog.scalascraper.browser.{Browser, JsoupBrowser}
-import net.ruippeixotog.scalascraper.model.Document
+import org.openqa.selenium.{By, WebDriver, WebElement}
 
 /**
- * Handles collecting HTML data from an HTTP endpoint and parsing it into some type.
+ * Uses a Selenium WebDriver to interact with a website and extract data. This trait probably takes the most work to
+ * implement, but will be the most powerful trait you can use (since it simulates a web browser).
  *
- * @tparam T The expected final type of the data. You will need to implement a [[convert]] function that can handle this
- *           data.
+ * @tparam T The expected final type of the data. You will need to convert to this yourself.
  */
-trait HTMLCollector[T] extends Collector[T] {
-  protected val browser: Browser = JsoupBrowser()
+trait SeleniumCollector[T] extends Collector[T] {
+  protected val driver: WebDriver
 
-  override def query(endpoint: String): T = {
-    convert(request(endpoint))
+  def get(endpoint: String): Unit = {
+    driver.get(s"$baseUrl$endpoint")
   }
 
-  def request(endpoint: String): Document = {
-    browser.get(s"$baseUrl$endpoint")
+  def find(by: By): WebElement = {
+    driver.findElement(by)
   }
-
-  def convert(content: Document): T
 }

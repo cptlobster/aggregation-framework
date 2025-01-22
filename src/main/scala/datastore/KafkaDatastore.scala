@@ -20,7 +20,7 @@ import java.util.Properties
 /**
  * Trait for pushing data to a Kafka producer.
  * @tparam T The expected final type of the data. This will need to match what you set in your
- *           [[dev.cptlobster.aggregation_framework.collector.Collector Collector]]s.
+ *           [[dev.cptlobster.aggregation_framework.collector.SttpCollector Collector]]s.
  */
 trait KafkaDatastore[T] {
   val topic: String
