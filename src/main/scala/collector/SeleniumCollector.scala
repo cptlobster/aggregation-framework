@@ -14,11 +14,11 @@
 package dev.cptlobster.aggregation_framework
 package collector
 
-import org.openqa.selenium.{By, WebDriver, WebElement}
+import org.openqa.selenium.WebDriver
 
 /**
- * Uses a Selenium WebDriver to interact with a website and extract data. This trait probably takes the most work to
- * implement, but will be the most powerful trait you can use (since it simulates a web browser).
+ * Uses a Selenium WebDriver to interact with a website and extract data. This takes the most work to implement, but
+ * will be the most powerful trait you can use (since it simulates a full web browser).
  *
  * @tparam T The expected final type of the data. You will need to convert to this yourself.
  */
@@ -27,9 +27,5 @@ trait SeleniumCollector[T] extends Collector[T] {
 
   def get(endpoint: String): Unit = {
     driver.get(s"$baseUrl$endpoint")
-  }
-
-  def find(by: By): WebElement = {
-    driver.findElement(by)
   }
 }
