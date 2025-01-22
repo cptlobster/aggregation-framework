@@ -28,16 +28,16 @@ trait SttpCollector[T] extends Collector[T] {
   private val sttpBackend: SttpBackend[Identity, Any] = HttpClientSyncBackend()
 
   def query(endpoint: String): T = {
-    this.convert(this.request(endpoint))
+    this.convert(this.get(endpoint))
   }
 
   /**
-   * Submit a simple HTTP request against an endpoint and receive the response as a string. You can override this with
+   * Submit an HTTP GET request against an endpoint and receive the response as a string. You can override this with
    * other HTTP clients or scraping tools (i.e. Selenium).
    * @param endpoint The endpoint (added to [[baseUrl]])
    * @return The response body if successful.
    */
-  protected def request(endpoint: String): String = {
+  protected def get(endpoint: String): String = {
     val url = uri"$baseUrl$endpoint"
     val response = basicRequest.get(url).send(sttpBackend)
 
@@ -48,9 +48,26 @@ trait SttpCollector[T] extends Collector[T] {
   }
 
   /**
+   * Submit an HTTP POST request against an endpoint and receive the response as a string. You can override this with
+   * other HTTP clients or scraping tools (i.e. Selenium).
+   * @param endpoint The endpoint (added to [[baseUrl]])
+   * @param body The request body
+   * @return The response body if successful.
+   */
+  protected def post(endpoint: String, body: String): String = {
+    val url = uri"$baseUrl$endpoint"
+    val response = basicRequest.body(body).post(url).send(sttpBackend)
+
+    response.body match {
+      case Right(v) => v
+      case Left(e) => throw new Exception(e)
+    }
+  }
+
+  /**
    * Parse a string input and convert it into your intended type. You will need to define this based on the input format
    * you're using, but other collector traits (such as [[JsonCollector]]) will implement this for you.
-   * @param content The response body returned from [[request]]
+   * @param content The response body returned from [[get]] or [[post]]
    * @return The intended response data
    */
   def convert(content: String): T
