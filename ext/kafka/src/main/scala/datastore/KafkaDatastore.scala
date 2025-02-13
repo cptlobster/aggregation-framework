@@ -15,6 +15,7 @@ package dev.cptlobster.aggregation_framework
 package datastore
 
 import org.apache.kafka.clients.producer.{Callback, KafkaProducer, ProducerRecord, RecordMetadata}
+
 import java.util.Properties
 
 /**

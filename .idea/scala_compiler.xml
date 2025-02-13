@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ScalaCompilerConfiguration">
-    <profile name="sbt 1" modules="aggregation_framework_9184,aggregation_framework_core,aggregation_framework_core.main,aggregation_framework_core.test,aggregation_framework_kafka,dev.aggregation_framework" />
+    <profile name="sbt 1" modules="aggregation_framework_9184,aggregation_framework_core,aggregation_framework_core.main,aggregation_framework_core.test,aggregation_framework_kafka,dev.aggregation_framework,dev.aggregation_framework.aggregation_framework_core,dev.aggregation_framework.aggregation_framework_json,dev.aggregation_framework.aggregation_framework_kafka,dev.aggregation_framework.aggregation_framework_selenium" />
   </component>
 </project>

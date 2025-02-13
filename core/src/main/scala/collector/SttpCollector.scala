@@ -19,7 +19,7 @@ import sttp.client3.{HttpClientSyncBackend, Identity, SttpBackend, UriContext, b
 /**
  * Handles collecting data from an HTTP endpoint and parsing it into some type. All collectors should implement some
  * variant of this trait (either directly or through existing implementations such as [[HTMLCollector]] or
- * [[JsonCollector]]
+ * [[dev.cptlobster.aggregation_framework.collector.JsonCollector JsonCollector]]
  *
  * @tparam T The expected final type of the data. You will need to implement a [[convert]] function that can handle this
  *           data.

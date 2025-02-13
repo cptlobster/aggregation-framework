@@ -35,7 +35,8 @@ trait JsonCollector[T] extends SttpCollector[T] {
   /**
    * Parse a response as JSON.
    *
-   * @param content The response body returned from [[request]]
+   * @param content The response body returned from
+   *                [[dev.cptlobster.aggregation_framework.collector.SttpCollector.request request]]
    *  @return The intended response data
    */
   def convert(content: String): T = {

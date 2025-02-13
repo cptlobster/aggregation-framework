@@ -5,6 +5,10 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/aggregation_framework.iml" filepath="$PROJECT_DIR$/.idea/modules/aggregation_framework.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework-build.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_core.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_json.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_json.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_kafka.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_kafka.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_selenium.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_selenium.iml" />
     </modules>
   </component>
 </project>

@@ -1,5 +1,8 @@
 # Using Navigators
 
+The Navigator API is designed to mimic an XPath-like syntax across multiple library-specific document tree navigation
+APIs.
+
 ## TreeNavigators
 
 We will use this example JSON for this section:

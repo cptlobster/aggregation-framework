@@ -1,13 +1,21 @@
-ThisBuild / version := "0.1.0-SNAPSHOT"
+// common build configuration
+lazy val common = Seq(
+  version := "0.1.0-SNAPSHOT",
+  scalaVersion  := "2.13.16",
+  idePackagePrefix := Some("dev.cptlobster.aggregation_framework")
+)
 
-ThisBuild / scalaVersion := "2.13.16"
-
-// Core project
-lazy val root = (project in file("."))
-  .settings(
-    name := "aggregation_framework",
-    idePackagePrefix := Some("dev.cptlobster.aggregation_framework"),
+// common meta information
+inThisBuild(
+  Seq(
+    homepage      := Some(url("https://github.com/cptlobster/aggregation-framework")),
+    organization  := "dev.cptlobster",
+    licenses      := Seq("GPLv3" -> url("https://www.gnu.org/licenses/gpl-3.0.en.html")),
+    developers    := List(
+      Developer("cptlobster", "Dustin Thomas", "io@cptlobster.dev", url("https://cptlobster.dev"))
+    ),
   )
+)
 
 // Dependency versions
 lazy val SttpVersion = "3.10.2"
@@ -16,19 +24,69 @@ lazy val ScalaScraperVersion = "3.1.2"
 lazy val SeleniumVersion = "4.28.0"
 lazy val KafkaVersion = "3.9.0"
 
-// Dependencies
-libraryDependencies ++= {
-  Seq(
-    // sttp: used for all Collectors
-    "com.softwaremill.sttp.client3" %% "core" % SttpVersion,
-    // json4s: used for parsing JSON in JsonCollectors
-    "org.json4s" %% "json4s-native" % Json4sVersion,
-    // scala-scraper: used for parsing HTML in HTMLCollector
-    "net.ruippeixotog" %% "scala-scraper" % ScalaScraperVersion,
-    // selenium: used for interacting with web applications in SeleniumCollector
-    "org.seleniumhq.selenium" % "selenium-java" % SeleniumVersion,
-    // kafka: used for Kafka producer classes
-    "org.apache.kafka" %% "kafka" % KafkaVersion,
-    "org.apache.kafka" % "kafka-clients" % KafkaVersion,
+// Core project
+lazy val core = (project in file("core"))
+  .settings(
+    common,
+    name := "aggregation_framework_core",
+    description := "Core API and abstractions for Aggregation Framework",
+    libraryDependencies := Seq(
+      // sttp: used for most Collectors
+      "com.softwaremill.sttp.client3" %% "core" % SttpVersion,
+      // scala-scraper: used for parsing HTML in HTMLCollector
+      "net.ruippeixotog" %% "scala-scraper" % ScalaScraperVersion
+    )
   )
-}
+
+// JSON processing extension
+lazy val json = (project in file("ext/json"))
+  .dependsOn(core)
+  .settings(
+    common,
+    name := "aggregation_framework_json",
+    description := "JSON parsing and processing extension for Aggregation Framework",
+    libraryDependencies := Seq(
+      // json4s: used for parsing JSON in JsonCollectors
+      "org.json4s" %% "json4s-native" % Json4sVersion
+    )
+  )
+
+// Selenium WebDriver/collector extension
+lazy val selenium = (project in file("ext/selenium"))
+  .dependsOn(core)
+  .settings(
+    common,
+    name := "aggregation_framework_selenium",
+    description := "Selenium WebDriver data collector extension for Aggregation Framework",
+    libraryDependencies := Seq(
+      // selenium: used for interacting with web applications in SeleniumCollector
+      "org.seleniumhq.selenium" % "selenium-java" % SeleniumVersion
+    )
+  )
+
+// Kafka datastore
+lazy val kafka = (project in file("ext/kafka"))
+  .dependsOn(core)
+  .settings(
+    common,
+    name := "aggregation_framework_kafka",
+    description := "Kafka datastore extension for Aggregation Framework",
+    libraryDependencies := Seq(
+      // kafka: used for Kafka producer classes
+      "org.apache.kafka" %% "kafka" % KafkaVersion,
+      "org.apache.kafka" % "kafka-clients" % KafkaVersion
+    )
+  )
+
+// Full project build
+lazy val root = (project in file("."))
+  .aggregate(
+    core,
+    kafka,
+    selenium
+  )
+  .settings(
+    common,
+    name := "aggregation_framework",
+    description := "A Swiss-army knife data scraping and processing framework.",
+  )
