@@ -34,8 +34,11 @@ graph LR
 
 ## Modules
 
-The project is split into a collection of modules. These are split so that you don't have to install a ton of external
+The project is split into a collection of packages. These are split so that you don't have to install a ton of external
 packages that you aren't going to use.
+
+The core package is located under `/core` in this repository, and the extension packages are located under their own
+subdirectories in `/ext`. Each extension package has its own README that describes it in more detail.
 
 ```mermaid
 graph BT
