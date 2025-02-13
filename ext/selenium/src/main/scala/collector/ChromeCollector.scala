@@ -14,18 +14,16 @@
 package dev.cptlobster.aggregation_framework
 package collector
 
-import org.openqa.selenium.WebDriver
+import org.openqa.selenium.chrome.{ChromeDriver, ChromeOptions}
 
 /**
  * Uses a Selenium WebDriver to interact with a website and extract data. This takes the most work to implement, but
- * will be the most powerful trait you can use (since it simulates a full web browser).
+ * will be the most powerful trait you can use (since it simulates a full web browser). This specific trait is
+ * preconfigured for a Chrome WebDriver and provides a sensible default configuration.
  *
  * @tparam T The expected final type of the data. You will need to convert to this yourself.
  */
-trait SeleniumCollector[T] extends Collector[T] {
-  protected val driver: WebDriver
-
-  def get(endpoint: String): Unit = {
-    driver.get(s"$baseUrl$endpoint")
-  }
+trait ChromeCollector[T] extends AbstractSeleniumCollector[T] {
+  protected val options: ChromeOptions = new ChromeOptions().addArguments("--no-sandbox")
+  protected val driver: ChromeDriver = new ChromeDriver(options)
 }
