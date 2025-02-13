@@ -12,8 +12,8 @@ import org.json4s.JsonDSL._
 case class JsonNavigator(tree: JValue) extends TreeNavigator[JValue, String] {
   implicit val formats: Formats = DefaultFormats
 
-  override def !>>(query: String): JsonNavigator = JsonNavigator(tree \ query)
-  override def !:>>(query: String): List[JsonNavigator] = {
+  override def \(query: String): JsonNavigator = JsonNavigator(tree \ query)
+  override def \\(query: String): List[JsonNavigator] = {
     val result = tree \\ query
     result.extract[List[JValue]].map(a => JsonNavigator(a))
   }

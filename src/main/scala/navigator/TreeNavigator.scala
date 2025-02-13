@@ -29,44 +29,15 @@ abstract class TreeNavigator[T, Q] {
    * @param query The query to execute against the document tree
    * @return The first element to match the query
    */
-  def !>>(query: Q): TreeNavigator[T, Q] = this >> query match {
-    case Some(v) => v
-    case None => throw new Exception(s"Element not found matching query: $query")
-  }
+  def \(query: Q): TreeNavigator[T, Q]
+
   /**
    * Get the first element from a document tree that matches the query.
    *
    * @param query The query to execute against the document tree
    * @return All elements that match the query
    */
-  def !:>>(query: Q): List[TreeNavigator[T, Q]] = this :>> query match {
-    case Some(v) => if (v.nonEmpty) { v } else { throw new Exception(s"No elements found matching query: $query") }
-    case None => throw new Exception(s"No elements found matching query: $query")
-  }
-  /**
-   * Get all elements from a document tree that match the query. This will throw an exception if no such elements exist.
-   *
-   * @param query The query to execute against the document tree
-   * @return All elements that match the query
-   */
-  def >>(query: Q): Option[TreeNavigator[T, Q]] = {
-    try { Some(this !>> query) }
-    catch {
-      case _: Exception => None
-    }
-  }
-  /**
-   * Get the first element match from a document tree that match the query.
-   *
-   * @param query The query to execute against the document tree
-   * @return All elements that match the query.
-   */
-  def :>>(query: Q): Option[List[TreeNavigator[T, Q]]] = {
-    try { Some(this !:>> query) }
-    catch {
-      case _: Exception => None
-    }
-  }
+  def \\(query: Q): List[TreeNavigator[T, Q]]
 
   /**
    * Get the original value.
