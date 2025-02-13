@@ -32,6 +32,20 @@ graph LR
     DS <-->|Data aggregation tools<br />i.e. Spark, Hive| FE
 ```
 
+## Modules
+
+The project is split into a collection of modules. These are split so that you don't have to install a ton of external
+packages that you aren't going to use.
+
+```mermaid
+graph BT
+    CORE[aggregation-framework-core]
+    JSON[aggregation-framework-json]
+    KAFKA[aggregation-framework-kafka]
+    SEL[aggregation-framework-selenium]
+    CORE --> JSON & KAFKA & SEL
+```
+
 ## Development
 This project uses sbt for project and dependency management. Install sbt via your preferred package manager; if you use
 IntelliJ, it can manage sbt for you.
