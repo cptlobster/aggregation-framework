@@ -33,7 +33,10 @@ trait Collector[T] {
    * failures along the way. You will either need to implement this yourself or use the helper methods in other traits
    * that implement this one.
    * @param endpoint The endpoint (added to [[baseUrl]])
-   * @return A fully processed value, or an exception if the request / convert fails.
+   * @return A fully processed value
+   * @throws APIError if the API returns a non-200 status code
+   * @throws ParseError if the data returns successfully, but the parser / navigator fails to parse the returned data
+   * @throws ConsumerException on any other exception
    */
   def query(endpoint: String): T
 }

@@ -23,8 +23,8 @@ import net.ruippeixotog.scalascraper.model.Document
 /**
  * Handles collecting HTML data from an HTTP endpoint and parsing it into some type.
  *
- * @tparam T The expected final type of the data. You will need to implement a [[convert]] function that can handle this
- *           data.
+ * @tparam T The expected final type of the data. You will need to implement a [[convert]] function that converts a
+ *           Scala-scraper [[Document]] to this datatype.
  */
 trait HTMLCollector[T] extends Collector[T] {
   protected val browser: Browser = JsoupBrowser()

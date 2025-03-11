@@ -14,8 +14,9 @@
 package dev.cptlobster.aggregation_framework
 package collector
 
-import dev.cptlobster.aggregation_framework.util.APIError
-import sttp.client3.{HttpClientSyncBackend, Identity, SttpBackend, UriContext, basicRequest}
+import util.APIError
+
+import sttp.client3.{HttpClientSyncBackend, Identity, Response, SttpBackend, UriContext, basicRequest}
 
 /**
  * Handles collecting data from an HTTP endpoint and parsing it into some type. All collectors should implement some
@@ -42,10 +43,7 @@ trait SttpCollector[T] extends Collector[T] {
     val url = uri"$baseUrl$endpoint"
     val response = basicRequest.get(url).send(sttpBackend)
 
-    response.body match {
-      case Right(v) => v
-      case Left(e) => throw new APIError(response.code.code, endpoint, response.statusText, e)
-    }
+    handleResponse(endpoint, response)
   }
 
   /**
@@ -59,6 +57,18 @@ trait SttpCollector[T] extends Collector[T] {
     val url = uri"$baseUrl$endpoint"
     val response = basicRequest.body(body).post(url).send(sttpBackend)
 
+    handleResponse(endpoint, response)
+  }
+
+  /**
+   * Determine if the response was successful or failing; return the result if successful, throw an exception otherwise
+   *
+   * @param endpoint The endpoint (added to [[baseUrl]])
+   * @param response The response object returned by sttp
+   * @return The response body if successful
+   * @throws APIError if the API returns a non-200 status code
+   */
+  def handleResponse(endpoint: String, response: Response[Either[String, String]]): String = {
     response.body match {
       case Right(v) => v
       case Left(e) => throw new APIError(response.code.code, endpoint, response.statusText, e)

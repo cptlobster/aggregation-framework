@@ -24,7 +24,14 @@ package datastore
  *           [[dev.cptlobster.aggregation_framework.collector.Collector Collector]]s.
  */
 trait Datastore[K, V] {
-  /** Push a key/value pair to your datastore. */
+  /**
+   * Push a key/value pair to your datastore.
+   * @throws DatastorePushError if the datastore returns an error (malformed query, etc.)
+   * @throws DatastoreAuthError if the application fails to authenticate against the datastore (bad password,
+   *                            certificate, etc.)
+   * @throws DatastoreConnectError if the application fails to connect to the database for any other reason
+   * @throws DatastoreException on any other error
+   */
   def push(key: K, value: V): Unit
 
   /** Get the key of the newest record pushed to the database. */

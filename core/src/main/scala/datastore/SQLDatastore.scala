@@ -14,7 +14,7 @@
 package dev.cptlobster.aggregation_framework
 package datastore
 
-import dev.cptlobster.aggregation_framework.util.{DatastoreException, DatastorePushError}
+import util.{DatastoreException, DatastorePushError}
 
 import java.sql.{Connection, DriverManager, PreparedStatement, SQLException}
 
