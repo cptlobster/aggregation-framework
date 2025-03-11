@@ -6,9 +6,19 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework-build.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_core.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_core.main.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_core.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_core.test.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_core.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_json.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_json.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_json.main.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_json.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_json.test.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_json.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_kafka.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_kafka.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_kafka.main.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_kafka.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_kafka.test.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_kafka.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_selenium.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_selenium.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_selenium.main.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_selenium.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_selenium.test.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.aggregation_framework_selenium.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.main.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.test.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.aggregation_framework.test.iml" />
     </modules>
   </component>
 </project>
