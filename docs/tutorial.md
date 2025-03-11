@@ -2,6 +2,19 @@
 
 These will give you a basic idea of how to use Aggregation Framework.
 
+## Install Packages
+
+In your project, add the following dependencies for this tutorial:
+```sbt
+libraryDependencies ++= Seq(
+  "dev.cptlobster" %% "aggregation-framework-core" % "0.1.0-SNAPSHOT",
+  "dev.cptlobster" %% "aggregation-framework-json" % "0.1.0-SNAPSHOT",
+  "dev.cptlobster" %% "aggregation-framework-kafka" % "0.1.0-SNAPSHOT"
+)
+```
+
+For this tutorial, we use the JSON and Kafka packages to add support for JSON parsing and pushing to a Kafka topic.
+
 ## Write a Basic Data Consumer
 
 This is an example of a basic data consumer that reads JSON data and pushes it to a Kafka datastore. It doesn't do any
@@ -57,7 +70,7 @@ Add this code in your `TutorialConsumer`:
 // to the expected value, which we will implement.
 override def find(value: JsonNavigator): JsonNavigator = {
   // We will use the JsonNavigator class to parse our JSON document.
-  value !>> "message" !>> "something" !>> "value"
+  value \ "message" \ "something" \ "value"
 }
 ```
 

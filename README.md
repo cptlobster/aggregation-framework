@@ -1,36 +1,55 @@
 # aggregation-framework
 
-A Swiss-army knife data scraping and processing tool written in Scala.
+A Swiss-army knife library for scraping and processing data from the web. Provides a unified interface for multiple
+different HTTP clients, and convenience functionality for parsing and preprocessing data for your applications to use.
+
 - Quickly build HTTP requests for a variety of data formats and APIs.
-- Parse common data formats such as XML, HTML, JSON, and more.
-- Push your aggregated data to Kafka topics for reliable realtime storage, or other datastores (such as Postgres or
-  Hadoop)
+- Parse common data formats such as XML, HTML, and JSON.
+- Push your aggregated data automatically to your preferred database (such as Kafka, MySQL, or Postgres).
 - Write your own collectors for non-standard data formats.
 
 ```mermaid
 graph LR
-    EXT1[(External<br />Data Source)]
-    EXT2[(External<br />Data Source)]
-    EXT3[(External<br />Data Source)]
+    EXT1[(External HTTP API)]
+    EXT2[(External HTTP API)]
+    EXT3[(External HTTP API)]
+
+    COL1[/Collector/]
+    COL2[/Collector/]
+    COL3[/Collector/]
     
-    subgraph AF[aggregation-framework]
-        COL1[/Collector/]
-        COL2[/Collector/]
-    
-        KAFKA[(Kafka DataStore)]
+    DB[(Application Database)]
+    BE1[Backend Application]
+    BE2[Backend Application]
+    BE3[Backend Application]
+  
+    subgraph AP[Aggregation Framework]
+        COL1
+        COL2
+        COL3
     end
     
-    DS[(Persistent DataStore<br />i.e. Hadoop, Postgres)]
-    FE[Frontend Application]
+    EXT1 --> COL1
+    EXT2 --> COL2
+    EXT3 --> COL3
     
-    EXT1 & EXT2 -->|HTTP| COL1
-    EXT3 -->|HTTP| COL2
-    COL1 & COL2 -->|Kafka Producer| KAFKA
-    KAFKA -->|Kafka Consumer| DS
-    COL1 & COL2 -->|Direct Datastore Interaction| DS
-    DS -->|Direct Data Request| FE
-    DS <-->|Data aggregation tools<br />i.e. Spark, Hive| FE
+    COL1 & COL2 & COL3 --> DB --> BE1 & BE2 & BE3
 ```
+
+## Get Started
+
+Add Aggregation Framework and your preferred extensions to your project. For sbt:
+
+```sbt
+libraryDependencies += "dev.cptlobster" %% "aggregation-framework-core" % "0.1.0-SNAPSHOT"
+// for JSON parsing
+libraryDependencies += "dev.cptlobster" %% "aggregation-framework-json" % "0.1.0-SNAPSHOT"
+```
+
+*Note: This is not published to any Maven repositories yet, you will need to build locally first. This may be published
+to Maven Central in the future when it is more stable.*
+
+To create a consumer, [follow the tutorial](docs/tutorial.md).
 
 ## Modules
 

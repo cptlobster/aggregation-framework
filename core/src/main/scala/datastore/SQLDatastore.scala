@@ -35,7 +35,7 @@ trait SQLDatastore[K, V] extends Datastore[K, V] {
   /** The password for your SQL database. */
   val jdbcPassword: String
 
-  /** The SQL connection. You will need to use this when assembling your Statements. */
+  /** The SQL connection. You will need to use this when assembling your [[java.sql.Statement Statement]]s. */
   val connection: Connection = DriverManager.getConnection(jdbcUrl, jdbcUsername, jdbcPassword)
 
   def push(key: K, value: V): Unit = {
@@ -46,6 +46,12 @@ trait SQLDatastore[K, V] extends Datastore[K, V] {
   /**
    * Build a [[PreparedStatement]] using your query results. You will need to define how the data is inserted into your
    * statement based on your database schema.
+   *
+   * This statement will likely follow the form of:
+   * {{{
+   * INSERT INTO table (key, value) VALUES (?, ?);
+   * }}}
+   *
    * @param key The primary key of your database
    * @param value The values
    * @return A [[PreparedStatement]] containing all your data.
