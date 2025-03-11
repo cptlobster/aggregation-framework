@@ -14,6 +14,7 @@
 package dev.cptlobster.aggregation_framework
 package collector
 
+import dev.cptlobster.aggregation_framework.util.APIError
 import sttp.client3.{HttpClientSyncBackend, Identity, SttpBackend, UriContext, basicRequest}
 
 /**
@@ -43,7 +44,7 @@ trait SttpCollector[T] extends Collector[T] {
 
     response.body match {
       case Right(v) => v
-      case Left(e) => throw new Exception(e)
+      case Left(e) => throw new APIError(response.code.code, endpoint, response.statusText, e)
     }
   }
 
@@ -60,7 +61,7 @@ trait SttpCollector[T] extends Collector[T] {
 
     response.body match {
       case Right(v) => v
-      case Left(e) => throw new Exception(e)
+      case Left(e) => throw new APIError(response.code.code, endpoint, response.statusText, e)
     }
   }
 

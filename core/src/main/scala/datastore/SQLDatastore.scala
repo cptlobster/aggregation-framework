@@ -14,7 +14,9 @@
 package dev.cptlobster.aggregation_framework
 package datastore
 
-import java.sql.{Connection, DriverManager, PreparedStatement}
+import dev.cptlobster.aggregation_framework.util.{DatastoreException, DatastorePushError}
+
+import java.sql.{Connection, DriverManager, PreparedStatement, SQLException}
 
 /**
  * Trait for pushing data to an SQL datastore (using JDBC).
@@ -39,8 +41,14 @@ trait SQLDatastore[K, V] extends Datastore[K, V] {
   val connection: Connection = DriverManager.getConnection(jdbcUrl, jdbcUsername, jdbcPassword)
 
   def push(key: K, value: V): Unit = {
-    val stmt: PreparedStatement = buildQuery(key, value)
-    stmt.executeQuery()
+    try {
+      val stmt: PreparedStatement = buildQuery(key, value)
+      stmt.executeUpdate()
+    }
+    catch {
+      case e: SQLException => throw new DatastorePushError(s"SQL Exception ${e.getErrorCode}: ${e.getMessage}")
+      case e: Exception => throw new DatastoreException(e.getMessage)
+    }
   }
 
   /**

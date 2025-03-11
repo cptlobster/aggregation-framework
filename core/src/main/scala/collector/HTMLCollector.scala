@@ -14,7 +14,10 @@
 package dev.cptlobster.aggregation_framework
 package collector
 
+import util.{ConsumerException, ParseError}
+
 import net.ruippeixotog.scalascraper.browser.{Browser, JsoupBrowser}
+import net.ruippeixotog.scalascraper.dsl.ValidationException
 import net.ruippeixotog.scalascraper.model.Document
 
 /**
@@ -31,7 +34,14 @@ trait HTMLCollector[T] extends Collector[T] {
   }
 
   def request(endpoint: String): Document = {
-    browser.get(s"$baseUrl$endpoint")
+    try {
+      browser.get(s"$baseUrl$endpoint")
+    }
+    catch {
+      case e: ValidationException => throw new ParseError(e.getMessage)
+      case e: NoSuchElementException => throw new ParseError(e.getMessage)
+      case e: Exception => throw new ConsumerException(e.getMessage)
+    }
   }
 
   def convert(content: Document): T
