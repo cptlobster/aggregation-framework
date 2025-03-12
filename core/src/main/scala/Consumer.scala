@@ -41,6 +41,8 @@ import datastore.Datastore
  * }
  * }}}
  *
+ * See the Tutorial for more detailed instructions on how to use.
+ *
  * @tparam K The type of your database key. This could be something like a [[String]], [[java.util.Date Date]], or a
  *           [[java.util.UUID UUID]], or something else; it depends on how you want to index your data internally (and
  *           what your target datastore supports). Note that this must be a unique value, and ideally this would be

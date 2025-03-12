@@ -51,7 +51,7 @@ to Maven Central in the future when it is more stable.*
 
 To create a consumer, [follow the tutorial](docs/tutorial.md).
 
-## Modules
+## Target Artifacts
 
 The project is split into a collection of packages. These are split so that you don't have to install a ton of external
 packages that you aren't going to use.
@@ -72,8 +72,10 @@ graph BT
 This project uses sbt for project and dependency management. Install sbt via your preferred package manager; if you use
 IntelliJ, it can manage sbt for you.
 
+To build the entire project:
+
 ```shell
-sbt build
+sbt compile
 ```
 
 ## License
