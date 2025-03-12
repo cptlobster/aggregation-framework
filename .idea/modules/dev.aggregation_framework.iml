@@ -3,14 +3,16 @@
   <component name="DisplayModuleName">
     <option name="name" value="aggregation_framework" />
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_23" inherit-compiler-output="true">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_23">
+    <output url="file://$MODULE_DIR$/../../target/scala-2.13/classes" />
+    <output-test url="file://$MODULE_DIR$/../../target/scala-2.13/test-classes" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/../..">
       <excludeFolder url="file://$MODULE_DIR$/../../target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="dev.aggregation_framework.main" />
-    <orderEntry type="module" module-name="dev.aggregation_framework.test" production-on-test="" />
+    <orderEntry type="library" name="sbt: scala-sdk-2.13.16" level="project" />
+    <orderEntry type="library" name="sbt: org.scala-lang:scala-library:2.13.16:jar" level="project" />
   </component>
 </module>

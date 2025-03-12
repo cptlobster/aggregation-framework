@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ScalaCompilerConfiguration">
-    <option name="separateProdTestSources" value="true" />
     <profile name="sbt 1" modules="aggregation_framework_9184,aggregation_framework_core,aggregation_framework_core.main,aggregation_framework_core.test,aggregation_framework_kafka,dev.aggregation_framework,dev.aggregation_framework.aggregation_framework_core,dev.aggregation_framework.aggregation_framework_core.main,dev.aggregation_framework.aggregation_framework_core.test,dev.aggregation_framework.aggregation_framework_json,dev.aggregation_framework.aggregation_framework_json.main,dev.aggregation_framework.aggregation_framework_json.test,dev.aggregation_framework.aggregation_framework_kafka,dev.aggregation_framework.aggregation_framework_kafka.main,dev.aggregation_framework.aggregation_framework_kafka.test,dev.aggregation_framework.aggregation_framework_selenium,dev.aggregation_framework.aggregation_framework_selenium.main,dev.aggregation_framework.aggregation_framework_selenium.test,dev.aggregation_framework.main,dev.aggregation_framework.test" />
   </component>
 </project>
