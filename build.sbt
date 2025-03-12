@@ -18,10 +18,11 @@ inThisBuild(
 )
 
 // Dependency versions
-lazy val SttpVersion = "3.10.2"
+lazy val TypesafeConfigVersion = "1.4.3"
+lazy val SttpVersion = "3.10.3"
 lazy val Json4sVersion = "4.0.7"
-lazy val ScalaScraperVersion = "3.1.2"
-lazy val SeleniumVersion = "4.28.0"
+lazy val ScalaScraperVersion = "3.1.3"
+lazy val SeleniumVersion = "4.29.0"
 lazy val KafkaVersion = "3.9.0"
 
 // Core project
@@ -31,6 +32,8 @@ lazy val core = (project in file("core"))
     name := "aggregation_framework_core",
     description := "Core API and abstractions for Aggregation Framework",
     libraryDependencies := Seq(
+      // typesafe config: used for configuration
+      "com.typesafe" % "config" % TypesafeConfigVersion,
       // sttp: used for most Collectors
       "com.softwaremill.sttp.client3" %% "core" % SttpVersion,
       // scala-scraper: used for parsing HTML in HTMLCollector
@@ -82,6 +85,7 @@ lazy val kafka = (project in file("ext/kafka"))
 lazy val root = (project in file("."))
   .aggregate(
     core,
+    json,
     kafka,
     selenium
   )
