@@ -14,6 +14,7 @@
 package dev.cptlobster.aggregation_framework
 package collector
 
+import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.{ChromeDriver, ChromeOptions}
 
 /**
@@ -25,5 +26,5 @@ import org.openqa.selenium.chrome.{ChromeDriver, ChromeOptions}
  */
 trait ChromeCollector[T] extends AbstractSeleniumCollector[T] {
   protected val options: ChromeOptions = new ChromeOptions().addArguments("--no-sandbox")
-  protected val driver: ChromeDriver = new ChromeDriver(options)
+  protected val driver: WebDriver = new ChromeDriver(options)
 }
