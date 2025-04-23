@@ -7,7 +7,7 @@ jobs:
       image: sbtscala/scala-sbt:eclipse-temurin-21.0.5_11_1.10.5_3.3.4
     steps:
       - name: "Install Git and NodeJS"
-        run: "apk add git nodejs"
+        run: "apt-get update && apt-get install -y git nodejs"
       - name: "Checkout Repository"
         uses: "actions/checkout@v4"
       - name: "Build"
@@ -23,7 +23,7 @@ jobs:
       - test
     steps:
       - name: "Install Git and NodeJS"
-        run: "apk add git nodejs"
+        run: "apt-get update && apt-get install -y git nodejs"
       - name: "Checkout"
         uses: "actions/checkout@v4"
       - name: "Login to Forge Packages"
