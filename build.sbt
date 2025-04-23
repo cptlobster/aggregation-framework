@@ -94,3 +94,6 @@ lazy val root = (project in file("."))
     name := "aggregation_framework",
     description := "A Swiss-army knife data scraping and processing framework.",
   )
+
+credentials += Credentials(Path.userHome / ".sbt" / ".credentials")
+publishTo := Some("forge.cptlobster.dev" at "https://forge.cptlobster.dev/api/packages/cptlobster/maven")
