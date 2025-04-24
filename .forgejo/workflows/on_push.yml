@@ -4,10 +4,10 @@ jobs:
   test:
     runs-on: docker
     container:
-      image: sbtscala/scala-sbt:eclipse-temurin-17.0.14_7_1.10.11_2.13.16
+      image: forge.cptlobster.dev/cptlobster/sbt:alpine-17-jdk-1.10.11
     steps:
       - name: "Install Git and NodeJS"
-        run: "apt-get update && apt-get install -y git nodejs"
+        run: "apk add git nodejs"
       - name: "Checkout Repository"
         uses: "actions/checkout@v4"
       - name: "Build"
@@ -18,12 +18,12 @@ jobs:
   build:
     runs-on: docker
     container:
-      image: sbtscala/scala-sbt:eclipse-temurin-17.0.14_7_1.10.11_2.13.16
+      image: forge.cptlobster.dev/cptlobster/sbt:alpine-17-jdk-1.10.11
     needs:
       - test
     steps:
       - name: "Install Git and NodeJS"
-        run: "apt-get update && apt-get install -y git nodejs"
+        run: "apk add git nodejs"
       - name: "Checkout"
         uses: "actions/checkout@v4"
       - name: "Login to Forge Packages"
