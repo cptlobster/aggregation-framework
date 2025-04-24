@@ -4,7 +4,7 @@ jobs:
   test:
     runs-on: docker
     container:
-      image: sbtscala/scala-sbt:eclipse-temurin-21.0.5_11_1.10.5_3.3.4
+      image: sbtscala/scala-sbt:eclipse-temurin-21.0.5_11_1.10.5_2.13.16
     steps:
       - name: "Install Git and NodeJS"
         run: "apt-get update && apt-get install -y git nodejs"
@@ -18,7 +18,7 @@ jobs:
   build:
     runs-on: docker
     container:
-      image: sbtscala/scala-sbt:eclipse-temurin-21.0.5_11_1.10.5_3.3.4
+      image: sbtscala/scala-sbt:eclipse-temurin-21.0.5_11_1.10.5_2.13.16
     needs:
       - test
     steps:
@@ -30,10 +30,10 @@ jobs:
         run: |
           mkdir -p ~/.sbt && \
           echo """
-            realm=forge.cptlobster.dev
+            realm=forge
             host=forge.cptlobster.dev
             user=cptlobster
-            password${{ secrets.PACKAGE_TOKEN }}""" > ~/.sbt/.credentials
+            password=${{ secrets.PACKAGE_TOKEN }}""" > ~/.sbt/.credentials
       - name: "Build"
         run: "sbt compile"
       - name: "Publish"
