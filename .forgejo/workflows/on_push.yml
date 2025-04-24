@@ -1,20 +1,6 @@
 on: [push]
 
 jobs:
-  test:
-    runs-on: docker
-    container:
-      image: forge.cptlobster.dev/cptlobster/sbt:alpine-17-jdk-1.10.11
-    steps:
-      - name: "Install Git and NodeJS"
-        run: "apk add git nodejs"
-      - name: "Checkout Repository"
-        uses: "actions/checkout@v4"
-      - name: "Build"
-        run: "sbt compile"
-      - name: "Test"
-        run: "sbt test"
-
   build:
     runs-on: docker
     container:
@@ -36,5 +22,7 @@ jobs:
             password=${{ secrets.PACKAGE_TOKEN }}""" > ~/.sbt/.credentials
       - name: "Build"
         run: "sbt compile"
+      - name: "Test"
+        run: "sbt test"
       - name: "Publish"
         run: "sbt publish forge"
