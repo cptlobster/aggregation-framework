@@ -15,25 +15,26 @@ jobs:
       - name: "Test"
         run: "sbt test"
 
-#  build:
-#    runs-on: docker
-#    container:
-#      image: sbtscala/scala-sbt:eclipse-temurin-21.0.5_11_1.10.5_3.3.4
-#    needs:
-#      - test
-#    steps:
-#      - name: "Install Git and NodeJS"
-#        run: "apt-get update && apt-get install -y git nodejs"
-#      - name: "Checkout"
-#        uses: "actions/checkout@v4"
-#      - name: "Login to Forge Packages"
-#        run: |
-#          echo """
-#            realm=forge.cptlobster.dev
-#            host=forge.cptlobster.dev
-#            user=cptlobster
-#            password${{ secrets.PACKAGE_TOKEN }}""" > ~/.sbt/credentials
-#      - name: "Build"
-#        run: "sbt compile"
-#      - name: "Publish"
-#        run: "sbt publish"
+  build:
+    runs-on: docker
+    container:
+      image: sbtscala/scala-sbt:eclipse-temurin-21.0.5_11_1.10.5_3.3.4
+    needs:
+      - test
+    steps:
+      - name: "Install Git and NodeJS"
+        run: "apt-get update && apt-get install -y git nodejs"
+      - name: "Checkout"
+        uses: "actions/checkout@v4"
+      - name: "Login to Forge Packages"
+        run: |
+          mkdir -p ~/.sbt && \
+          echo """
+            realm=forge.cptlobster.dev
+            host=forge.cptlobster.dev
+            user=cptlobster
+            password${{ secrets.PACKAGE_TOKEN }}""" > ~/.sbt/.credentials
+      - name: "Build"
+        run: "sbt compile"
+      - name: "Publish"
+        run: "sbt publish forge"

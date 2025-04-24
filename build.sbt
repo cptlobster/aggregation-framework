@@ -2,7 +2,9 @@
 lazy val common = Seq(
   version := "0.1.0-SNAPSHOT",
   scalaVersion  := "2.13.16",
-  idePackagePrefix := Some("dev.cptlobster.aggregation_framework")
+  idePackagePrefix := Some("dev.cptlobster.aggregation_framework"),
+  credentials += Credentials(Path.userHome / ".sbt" / ".credentials"),
+  publishTo := Some("forge" at "https://forge.cptlobster.dev/api/packages/cptlobster/maven")
 )
 
 // common meta information
@@ -94,6 +96,3 @@ lazy val root = (project in file("."))
     name := "aggregation_framework",
     description := "A Swiss-army knife data scraping and processing framework.",
   )
-
-credentials += Credentials(Path.userHome / ".sbt" / ".credentials")
-publishTo := Some("forge.cptlobster.dev" at "https://forge.cptlobster.dev/api/packages/cptlobster/maven")
