@@ -42,16 +42,15 @@ Add Aggregation Framework and your preferred extensions to your project. For sbt
 
 ```sbt
 // add Forge as a resolver
-resolvers += "forge.cptlobster.dev" at "https://forge.cptlobster.dev/api/packages/cptlobster/maven"
+resolvers += "Gitea Package API" at "https://forge.cptlobster.dev/api/packages/cptlobster/maven"
 
 libraryDependencies += "dev.cptlobster" %% "aggregation-framework-core" % "0.1.0-SNAPSHOT"
 // for JSON parsing
 libraryDependencies += "dev.cptlobster" %% "aggregation-framework-json" % "0.1.0-SNAPSHOT"
 ```
 
-*Note: This is not published to any Maven repositories yet, you will need to build locally first. Development builds 
-will be published at https://forge.cptlobster.dev once actions are properly setup. This may be published to Maven
-Central in the future when it is more stable.*
+*Note: Snapshot versions are available here at forge.cptlobster.dev. Release versions will be made available on Maven
+Central at a future date.*
 
 To create a consumer, [follow the tutorial](docs/tutorial.md).
 
