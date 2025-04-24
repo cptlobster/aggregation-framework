@@ -53,7 +53,6 @@ lazy val json = (project in file("ext/json"))
     name := "aggregation_framework_json",
     description := "JSON parsing and processing extension for Aggregation Framework",
     libraryDependencies := Seq(
-      "dev.cptlobster.aggregation_framework" %% "aggregation_framework_core" % libraryVersion,
       // json4s: used for parsing JSON in JsonCollectors
       "org.json4s" %% "json4s-native" % Json4sVersion
     )
@@ -67,7 +66,6 @@ lazy val selenium = (project in file("ext/selenium"))
     name := "aggregation_framework_selenium",
     description := "Selenium WebDriver data collector extension for Aggregation Framework",
     libraryDependencies := Seq(
-      "dev.cptlobster.aggregation_framework" %% "aggregation_framework_core" % libraryVersion,
       // selenium: used for interacting with web applications in SeleniumCollector
       "org.seleniumhq.selenium" % "selenium-java" % SeleniumVersion
     )
@@ -79,7 +77,6 @@ lazy val kafka = (project in file("ext/kafka"))
   .settings(
     common,
     name := "aggregation_framework_kafka",
-    description := "Kafka datastore extension for Aggregation Framework",
     libraryDependencies := Seq(
       "dev.cptlobster.aggregation_framework" %% "aggregation_framework_core" % libraryVersion,
       // kafka: used for Kafka producer classes
@@ -100,10 +97,4 @@ lazy val root = (project in file("."))
     common,
     name := "aggregation_framework",
     description := "A Swiss-army knife data scraping and processing framework.",
-    libraryDependencies := Seq(
-      "dev.cptlobster.aggregation_framework" %% "aggregation_framework_core" % libraryVersion,
-      "dev.cptlobster.aggregation_framework" %% "aggregation_framework_json" % libraryVersion,
-      "dev.cptlobster.aggregation_framework" %% "aggregation_framework_selenium" % libraryVersion,
-      "dev.cptlobster.aggregation_framework" %% "aggregation_framework_kafka" % libraryVersion,
-    )
   )
