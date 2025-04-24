@@ -16,7 +16,7 @@ jobs:
         run: |
           mkdir -p ~/.sbt && \
           echo """
-            realm=forge
+            realm=Gitea Package API @ forge.cptlobster.dev
             host=forge.cptlobster.dev
             user=cptlobster
             password=${{ secrets.PACKAGE_TOKEN }}""" > ~/.sbt/.credentials
