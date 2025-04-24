@@ -4,7 +4,7 @@ jobs:
   test:
     runs-on: docker
     container:
-      image: sbtscala/scala-sbt:eclipse-temurin-21.0.5_11_1.10.5_2.13.16
+      image: sbtscala/scala-sbt:eclipse-temurin-17.0.14_7_1.10.11_2.13.16
     steps:
       - name: "Install Git and NodeJS"
         run: "apt-get update && apt-get install -y git nodejs"
@@ -18,7 +18,7 @@ jobs:
   build:
     runs-on: docker
     container:
-      image: sbtscala/scala-sbt:eclipse-temurin-21.0.5_11_1.10.5_2.13.16
+      image: sbtscala/scala-sbt:eclipse-temurin-17.0.14_7_1.10.11_2.13.16
     needs:
       - test
     steps:
