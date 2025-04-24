@@ -5,8 +5,6 @@ jobs:
     runs-on: docker
     container:
       image: forge.cptlobster.dev/cptlobster/sbt:alpine-17-jdk-1.10.11
-    needs:
-      - test
     steps:
       - name: "Install Git and NodeJS"
         run: "apk add git nodejs"
