@@ -78,7 +78,6 @@ lazy val kafka = (project in file("ext/kafka"))
     common,
     name := "aggregation_framework_kafka",
     libraryDependencies := Seq(
-      "dev.cptlobster.aggregation_framework" %% "aggregation_framework_core" % libraryVersion,
       // kafka: used for Kafka producer classes
       "org.apache.kafka" %% "kafka" % KafkaVersion,
       "org.apache.kafka" % "kafka-clients" % KafkaVersion
