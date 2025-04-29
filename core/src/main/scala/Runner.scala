@@ -13,9 +13,9 @@
  */
 package dev.cptlobster.aggregation_framework
 
-abstract case class Runner() {
+case class Runner() {
   /** All declared consumers that can be run. */
-  val consumers: List[Consumer[Any, Any]]
+  protected val consumers: List[Consumer[Any, Any]] = List()
 
   /** Split out ScheduledConsumers */
   private val scheduled: List[ScheduledConsumer[Any, Any]] =
@@ -38,8 +38,13 @@ abstract case class Runner() {
     println("")
     println("Aggregation Framework Runner")
 
-    val successes: Int = runOneshot()
-    println(s"Completed, $successes out of ${oneshot.size} consumers succeeded.")
+    if (consumers.isEmpty) {
+      println("No consumers are defined! You should extend the Runner class and override the consumers variable.")
+    }
+    else {
+      val successes: Int = runOneshot()
+      println(s"Completed, $successes out of ${oneshot.size} consumers succeeded.")
+    }
   }
 
   /** Run a single consumer, print errors to console. */
@@ -57,10 +62,15 @@ abstract case class Runner() {
 
   /** Run all one-shot consumers, print errors to console. */
   private def runOneshot(): Int = {
-    println("Running oneshot consumers...")
-    (for (cons <- oneshot) yield {
-      run(cons)
-    }).sum
+    if (oneshot.isEmpty) {
+      println("No oneshot consumers are defined! You may want to run scheduled jobs instead, or add a consumer to your Runner class.")
+      0
+    } else {
+      println("Running oneshot consumers...")
+      (for (cons <- oneshot) yield {
+        run(cons)
+      }).sum
+    }
   }
 
   private def runScheduled(): Unit = {
