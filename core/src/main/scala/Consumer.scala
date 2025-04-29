@@ -16,6 +16,9 @@ package dev.cptlobster.aggregation_framework
 import collector.Collector
 import datastore.Datastore
 
+import java.time.Duration
+import scala.annotation.tailrec
+
 /**
  * A consumer is a combination of a [[Collector]] and a [[Datastore]], and the highest level interface with Aggregation
  * Framework. Running the [[collect]] function will cause the [[Collector]] to execute a query against the
@@ -49,6 +52,56 @@ import datastore.Datastore
  *           associated with the date/time that a record is created.
  * @tparam V The expected final type of the data. This will need to match what you set in your [[Collector]]s.
  */
-trait Consumer[K, V] extends Collector[V] with Datastore[K, V]{
-  def collect(): Unit
+trait Consumer[K, V] extends Collector[V] with Datastore[K, V] {
+  /** The amount of times a function should retry on failure. */
+  val retries: Int = 2
+  /** How long to wait after a failed attempt. */
+  val retryDelay: Duration = Duration.ofSeconds(5)
+
+  /**
+   * User-defined collection function. This would query your target endpoint, but NOT store it. Retries and errors are
+   * handled by the [[run()]] function, so they will not need to be implemented here.
+   */
+  def collect(): (K, V)
+
+  /**
+   * Attempt to run [[collect()]] and store its result to the datastore. In the event that [[collect()]] has a
+   * recoverable failure, it will be rerun after the duration of [[retryDelay]] passes; this will happen [[retries]]
+   * amount of times before failing.
+   */
+  def run(): Unit = {
+    val (k: K, v: V) = runCollect(retries + 1)
+    push(k, v)
+  }
+
+  /**
+   * Attempt to run [[collect()]] and print to the console. In the event that [[collect()]] has a recoverable failure,
+   * it will be rerun after the duration of [[retryDelay]] passes; this will happen [[retries]] amount of times before
+   * failing.
+   */
+  def dryRun(): Unit = {
+    val (k: K, v: V) = runCollect(retries + 1)
+    println(s"$k: $v")
+  }
+
+  /**
+   * Attempt to run [[collect()]]. In the event that [[collect()]] has a recoverable failure, it will be rerun after the
+   * duration of [[retryDelay]] passes; this will happen [[retries]] amount of times before failing. This is the
+   * recursive call that handles retries.
+   *
+   * @param attempts The amount of attempts this function has left.
+   */
+  @tailrec private def runCollect(attempts: Int): (K, V) = {
+    try {
+      collect()
+    } catch {
+      case e: Exception => if (attempts > 0) {
+        println(e.getMessage)
+        wait(retryDelay.toMillis)
+        runCollect(attempts - 1)
+      } else {
+        throw e
+      }
+    }
+  }
 }

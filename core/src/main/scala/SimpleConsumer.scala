@@ -23,8 +23,8 @@ import java.util.Date
  */
 abstract class SimpleConsumer[T] extends Consumer[Date, T] {
   val endpoint: String
-  def collect(): Unit = {
+  def collect(): (Date, T) = {
     val result: T = query(endpoint)
-    push(new Date(), result)
+    (new Date(), result)
   }
 }
