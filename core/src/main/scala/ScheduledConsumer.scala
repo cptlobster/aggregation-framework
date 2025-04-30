@@ -78,4 +78,11 @@ trait ScheduledConsumer[K, V] extends Consumer[K, V] {
       next(current, compare.plus(interval))
     }
   }
+
+  /**
+   * Get the [[Duration]] until the next job is scheduled to run.
+   * @param current The time that the next job should be calculated from.
+   * @return the [[Duration]] until the next job is scheduled to run (as calculated by [[next()]]).
+   */
+  def timeToNext(current: Instant): Duration = next(current).until(current)
 }
