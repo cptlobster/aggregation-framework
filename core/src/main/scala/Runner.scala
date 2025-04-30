@@ -16,7 +16,7 @@ package dev.cptlobster.aggregation_framework
 import jdk.internal.misc.Signal
 
 import java.time.Instant
-import java.util.concurrent.{ScheduledThreadPoolExecutor, TimeUnit}
+import util.ScheduledThreadPoolExecutor
 
 object Runner extends App {
   /** All declared consumers that can be run. */
@@ -61,8 +61,7 @@ object Runner extends App {
     println("Initializing scheduler and thread pool...")
     // create the ScheduledThreadPoolExecutor
     val executor: ScheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(2)
-    executor.setContinueExistingPeriodicTasksAfterShutdownPolicy(false)
-    executor.setExecuteExistingDelayedTasksAfterShutdownPolicy(false)
+    executor.setRunScheduledTasksAfterShutdown(false)
 
     // Stop execution if SIGINT is triggered (Ctrl+C)
     Signal.handle(new Signal("INT"),  // SIGINT
@@ -75,7 +74,7 @@ object Runner extends App {
     // add all ScheduledConsumers to the thread pool
     for (cons <- scheduled) {
       val initialDelay = cons.timeToNext(Instant.now())
-      executor.scheduleAtFixedRate(Task(cons), initialDelay.toMillis, cons.interval.toMillis, TimeUnit.MILLISECONDS)
+      executor.scheduleRepeating(cons.run, initialDelay, cons.interval)
     }
 
     println("All jobs scheduled successfully. Runner can be stopped using SIGINT (Ctrl+C).")
