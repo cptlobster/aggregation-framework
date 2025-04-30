@@ -15,6 +15,7 @@ package dev.cptlobster.aggregation_framework
 
 import collector.Collector
 import datastore.Datastore
+import util.RecoverableException
 
 import java.time.Duration
 import scala.annotation.tailrec
@@ -95,7 +96,7 @@ trait Consumer[K, V] extends Collector[V] with Datastore[K, V] {
     try {
       collect()
     } catch {
-      case e: Exception => if (attempts > 0) {
+      case e: RecoverableException => if (attempts > 0) {
         println(e.getMessage)
         wait(retryDelay.toMillis)
         runCollect(attempts - 1)
