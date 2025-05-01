@@ -13,14 +13,23 @@
  */
 package dev.cptlobster.aggregation_framework
 
+import picocli.CommandLine
+import picocli.CommandLine.{Command, Option, Parameters}
 import jdk.internal.misc.Signal
 
 import java.time.Instant
 import util.ScheduledThreadPoolExecutor
 
-object Runner extends App {
+import java.util.concurrent.Callable
+
+import org.slf4j.{Logger, LoggerFactory}
+
+@Command
+class Runner extends Callable[Int] {
   /** All declared consumers that can be run. */
   protected val consumers: List[Consumer[Any, Any]] = List()
+  /** slf4j */
+  val logger: Logger = LoggerFactory.getLogger(classOf[Runner])
 
   /** Split out ScheduledConsumers */
   private val scheduled: List[ScheduledConsumer[Any, Any]] =
@@ -35,11 +44,11 @@ object Runner extends App {
   private def run(cons: Consumer[Any, Any]): Int = {
     try {
       cons.run()
-      println(s"Consumer succeeded.")
+      logger.info(s"Consumer succeeded.")
       1
     } catch {
       case e: Exception =>
-        println(s"Consumer failed after ${cons.retries} attempts: ${e.getMessage}")
+        logger.error(s"Consumer failed after ${cons.retries} attempts: ${e.getMessage}")
         0
     }
   }
@@ -47,10 +56,10 @@ object Runner extends App {
   /** Run all one-shot consumers, print errors to console. */
   private def runOneshot(): Int = {
     if (oneshot.isEmpty) {
-      println("No oneshot consumers are defined! You may want to run scheduled jobs instead, or add a consumer to your Runner class.")
+      logger.error("No oneshot consumers are defined! You may want to run scheduled jobs instead, or add a consumer to your Runner class.")
       0
     } else {
-      println("Running oneshot consumers...")
+      logger.info("Running oneshot consumers...")
       (for (cons <- oneshot) yield {
         run(cons)
       }).sum
@@ -58,7 +67,7 @@ object Runner extends App {
   }
 
   private def runScheduled(): Unit = {
-    println("Initializing scheduler and thread pool...")
+    logger.info("Initializing scheduler and thread pool...")
     // create the ScheduledThreadPoolExecutor
     val executor: ScheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(2)
     executor.setRunScheduledTasksAfterShutdown(false)
@@ -66,7 +75,7 @@ object Runner extends App {
     // Stop execution if SIGINT is triggered (Ctrl+C)
     Signal.handle(new Signal("INT"),  // SIGINT
       _ => {
-        println("User interrupt. Shutting down thread pool.")
+        logger.info("User interrupt. Shutting down thread pool.")
         executor.shutdown()
       }
     )
@@ -77,35 +86,43 @@ object Runner extends App {
       executor.scheduleRepeating(cons.run, initialDelay, cons.interval)
     }
 
-    println("All jobs scheduled successfully. Runner can be stopped using SIGINT (Ctrl+C).")
+    logger.info("All jobs scheduled successfully. Runner can be stopped using SIGINT (Ctrl+C).")
   }
 
-  println("   ___                              __  _         ")
-  println("  / _ |___ ____ ________ ___ ____ _/ /_(____  ___ ")
-  println(" / __ / _ `/ _ `/ __/ -_/ _ `/ _ `/ __/ / _ \\/ _ \\")
-  println("/_/ |_\\_, /\\_, /_/  \\__/\\_, /\\_,_/\\__/_/\\___/_//_/")
-  println("     /___//___/        /___/                  __  ")
-  println("       / __/______ ___ _ ___ _    _____  ____/ /__")
-  println("      / _// __/ _ `/  ' / -_| |/|/ / _ \\/ __/  '_/")
-  println("     /_/ /_/  \\_,_/_/_/_\\__/|__,__/\\___/_/ /_/\\_\\ ")
-  println("")
-  println("Aggregation Framework Runner")
+  def call(): Int = {
+    logger.info("   ___                              __  _         ")
+    logger.info("  / _ |___ ____ ________ ___ ____ _/ /_(____  ___ ")
+    logger.info(" / __ / _ `/ _ `/ __/ -_/ _ `/ _ `/ __/ / _ \\/ _ \\")
+    logger.info("/_/ |_\\_, /\\_, /_/  \\__/\\_, /\\_,_/\\__/_/\\___/_//_/")
+    logger.info("     /___//___/        /___/                  __  ")
+    logger.info("       / __/______ ___ _ ___ _    _____  ____/ /__")
+    logger.info("      / _// __/ _ `/  ' / -_| |/|/ / _ \\/ __/  '_/")
+    logger.info("     /_/ /_/  \\_,_/_/_/_\\__/|__,__/\\___/_/ /_/\\_\\ ")
+    logger.info("")
+    logger.info("Aggregation Framework Runner")
 
-  if (consumers.isEmpty) {
-    println("No consumers are defined! You should extend the Runner class and override the consumers variable.")
-  }
-  else {
-    val successes: Int = runOneshot()
-    println(s"Completed, $successes out of ${oneshot.size} consumers succeeded.")
+    if (consumers.isEmpty) {
+      logger.error("No consumers are defined! You should extend the Runner class and override the consumers variable.")
+    }
+    else {
+      val successes: Int = runOneshot()
+      logger.info(s"Completed, $successes out of ${oneshot.size} consumers succeeded.")
+    }
+    0
   }
 }
 
+object Runner extends App {
+  System.exit(new CommandLine(new Runner()).execute(args: _*))
+}
+
 case class Task(cons: Consumer[Any, Any]) extends Runnable {
+  val logger: Logger = LoggerFactory.getLogger(classOf[Task])
   override def run(): Unit = try {
     cons.run()
-    println(s"Consumer succeeded.")
+    logger.debug(s"Consumer succeeded.")
   } catch {
     case e: Exception =>
-      println(s"Consumer failed after ${cons.retries} attempts: ${e.getMessage}")
+      logger.error(s"Consumer failed after ${cons.retries} attempts: ${e.getMessage}")
   }
 }

@@ -9,6 +9,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/aggregation_framework/core/dev.aggregation_framework.aggregation_framework_core.iml" filepath="$PROJECT_DIR$/.idea/modules/aggregation_framework/core/dev.aggregation_framework.aggregation_framework_core.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/aggregation_framework/ext/json/dev.aggregation_framework.aggregation_framework_json.iml" filepath="$PROJECT_DIR$/.idea/modules/aggregation_framework/ext/json/dev.aggregation_framework.aggregation_framework_json.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/aggregation_framework/ext/kafka/dev.aggregation_framework.aggregation_framework_kafka.iml" filepath="$PROJECT_DIR$/.idea/modules/aggregation_framework/ext/kafka/dev.aggregation_framework.aggregation_framework_kafka.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/aggregation_framework/ext/runner/dev.aggregation_framework.aggregation_framework_runner.iml" filepath="$PROJECT_DIR$/.idea/modules/aggregation_framework/ext/runner/dev.aggregation_framework.aggregation_framework_runner.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/aggregation_framework/ext/selenium/dev.aggregation_framework.aggregation_framework_selenium.iml" filepath="$PROJECT_DIR$/.idea/modules/aggregation_framework/ext/selenium/dev.aggregation_framework.aggregation_framework_selenium.iml" />
     </modules>
   </component>

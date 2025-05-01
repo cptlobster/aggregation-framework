@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/ext/json" />
             <option value="$PROJECT_DIR$/ext/kafka" />
+            <option value="$PROJECT_DIR$/ext/runner" />
             <option value="$PROJECT_DIR$/ext/selenium" />
             <option value="$PROJECT_DIR$/project" />
           </set>

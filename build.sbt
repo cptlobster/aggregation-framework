@@ -28,6 +28,8 @@ lazy val Json4sVersion = "4.0.7"
 lazy val ScalaScraperVersion = "3.1.3"
 lazy val SeleniumVersion = "4.29.0"
 lazy val KafkaVersion = "3.9.0"
+lazy val picoCliVersion = "4.7.7"
+lazy val slf4jVersion = "2.0.17"
 
 // Core project
 lazy val core = (project in file("core"))
@@ -36,6 +38,8 @@ lazy val core = (project in file("core"))
     name := "aggregation_framework_core",
     description := "Core API and abstractions for Aggregation Framework",
     libraryDependencies := Seq(
+      // slf4j: used for logging
+      "org.slf4j" % "slf4j-api" % slf4jVersion,
       // typesafe config: used for configuration
       "com.typesafe" % "config" % TypesafeConfigVersion,
       // sttp: used for most Collectors
@@ -77,10 +81,25 @@ lazy val kafka = (project in file("ext/kafka"))
   .settings(
     common,
     name := "aggregation_framework_kafka",
+    description := "Kafka datastore extension for Aggregation Framework",
     libraryDependencies := Seq(
       // kafka: used for Kafka producer classes
       "org.apache.kafka" %% "kafka" % KafkaVersion,
       "org.apache.kafka" % "kafka-clients" % KafkaVersion
+    )
+  )
+
+// Kafka datastore
+lazy val runner = (project in file("ext/runner"))
+  .dependsOn(core)
+  .settings(
+    common,
+    name := "aggregation_framework_runner",
+    libraryDependencies := Seq(
+      // picocli
+      "info.picocli" % "picocli" % picoCliVersion,
+      // logging
+      "org.slf4j" % "slf4j-simple" % slf4jVersion
     )
   )
 
@@ -90,7 +109,8 @@ lazy val root = (project in file("."))
     core,
     json,
     kafka,
-    selenium
+    selenium,
+    runner
   )
   .settings(
     common,

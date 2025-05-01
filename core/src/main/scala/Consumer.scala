@@ -20,6 +20,8 @@ import util.RecoverableException
 import java.time.Duration
 import scala.annotation.tailrec
 
+import org.slf4j.{Logger, LoggerFactory}
+
 /**
  * A consumer is a combination of a [[Collector]] and a [[Datastore]], and the highest level interface with Aggregation
  * Framework. Running the [[collect]] function will cause the [[Collector]] to execute a query against the
@@ -53,11 +55,13 @@ import scala.annotation.tailrec
  *           associated with the date/time that a record is created.
  * @tparam V The expected final type of the data. This will need to match what you set in your [[Collector]]s.
  */
-trait Consumer[K, V] extends Collector[V] with Datastore[K, V] {
+trait Consumer[K, V] extends Collector[V] with Datastore[K, V] with Runnable {
   /** The amount of times a function should retry on failure. */
   val retries: Int = 2
   /** How long to wait after a failed attempt. */
   val retryDelay: Duration = Duration.ofSeconds(5)
+  /** slf4j logger */
+  val logger: Logger = LoggerFactory.getLogger(classOf[Consumer[K, V]])
 
   /**
    * User-defined collection function. This would query your target endpoint, but NOT store it. Retries and errors are
@@ -71,7 +75,9 @@ trait Consumer[K, V] extends Collector[V] with Datastore[K, V] {
    * amount of times before failing.
    */
   def run(): Unit = {
+    logger.debug("Beginning collection.")
     val (k: K, v: V) = runCollect(retries + 1)
+    logger.debug("{}: {}", k, v)
     push(k, v)
   }
 
@@ -82,7 +88,7 @@ trait Consumer[K, V] extends Collector[V] with Datastore[K, V] {
    */
   def dryRun(): Unit = {
     val (k: K, v: V) = runCollect(retries + 1)
-    println(s"$k: $v")
+    logger.info(s"$k: $v")
   }
 
   /**
@@ -97,12 +103,14 @@ trait Consumer[K, V] extends Collector[V] with Datastore[K, V] {
       collect()
     } catch {
       case e: RecoverableException => if (attempts > 0) {
-        println(e.getMessage)
-        wait(retryDelay.toMillis)
+        logger.error(e.getMessage)
+        wait(e.retryAfter.getOrElse(retryDelay).toMillis)
+        logger.info("Retrying... ({} attempt(s) left)", attempts)
         runCollect(attempts - 1)
       } else {
         throw e
       }
+      case e: Exception => throw e
     }
   }
 }
