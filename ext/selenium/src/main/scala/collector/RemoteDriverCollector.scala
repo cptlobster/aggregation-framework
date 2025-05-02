@@ -29,6 +29,7 @@ import java.net.URI
  */
 trait RemoteChromeCollector[T] extends ChromeCollector[T] {
   protected val driverUrl: String
+  override val collectorStr: String = s"Chrome at $driverUrl"
   override protected val driver: WebDriver = new RemoteWebDriver(URI.create(driverUrl).toURL, options)
 }
 
@@ -41,5 +42,6 @@ trait RemoteChromeCollector[T] extends ChromeCollector[T] {
  */
 trait RemoteFirefoxCollector[T] extends FirefoxCollector[T] {
   protected val driverUrl: String
+  override val collectorStr: String = s"Firefox at $driverUrl"
   override protected val driver: WebDriver = new RemoteWebDriver(URI.create(driverUrl).toURL, options)
 }

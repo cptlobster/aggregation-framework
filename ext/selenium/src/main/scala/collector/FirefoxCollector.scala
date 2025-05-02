@@ -25,6 +25,7 @@ import org.openqa.selenium.firefox.{FirefoxDriver, FirefoxOptions}
  * @tparam T The expected final type of the data. You will need to convert to this yourself.
  */
 trait FirefoxCollector[T] extends AbstractSeleniumCollector[T] {
+  override val collectorStr: String = "Firefox"
   protected val options: FirefoxOptions = new FirefoxOptions()
   protected val driver: WebDriver = new FirefoxDriver(options)
 }

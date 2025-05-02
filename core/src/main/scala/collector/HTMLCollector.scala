@@ -27,6 +27,7 @@ import net.ruippeixotog.scalascraper.model.Document
  *           Scala-scraper [[Document]] to this datatype.
  */
 trait HTMLCollector[T] extends Collector[T] {
+  override val collectorStr: String = "HTML Collector (scala-scraper)"
   protected val browser: Browser = JsoupBrowser()
 
   override def query(endpoint: String): T = {

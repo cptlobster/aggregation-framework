@@ -56,6 +56,10 @@ import org.slf4j.{Logger, LoggerFactory}
  * @tparam V The expected final type of the data. This will need to match what you set in your [[Collector]]s.
  */
 trait Consumer[K, V] extends Collector[V] with Datastore[K, V] with Runnable {
+  /** The name of this collector. Must be unique between all collectors. */
+  val name: String
+  /** The tags that this collector has.  */
+  val tags: List[String]
   /** The amount of times a function should retry on failure. */
   val retries: Int = 2
   /** How long to wait after a failed attempt. */
@@ -112,5 +116,10 @@ trait Consumer[K, V] extends Collector[V] with Datastore[K, V] with Runnable {
       }
       case e: Exception => throw e
     }
+  }
+
+  override def toString: String = {
+    s"Consumer $name: $collectorStr -> $datastoreStr" +
+      s"  Tags: ${tags.mkString(", ")}"
   }
 }

@@ -30,6 +30,7 @@ import org.json4s.native.JsonMethods._
  *           data.
  */
 trait JsonCollector[T] extends SttpCollector[T] {
+  override val collectorStr: String = "JSON Collector (sttp)"
   implicit val formats: Formats = DefaultFormats
   // implicitly provide a manifest for our generic type so the library builds
   // you may need to write your own json4s Serializer/Deserializer classes if reflection doesn't cut it

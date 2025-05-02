@@ -37,6 +37,8 @@ trait SQLDatastore[K, V] extends Datastore[K, V] {
   /** The password for your SQL database. */
   val jdbcPassword: String
 
+  override val datastoreStr: String = s"SQL Datastore ($jdbcUrl)"
+
   /** The SQL connection. You will need to use this when assembling your [[java.sql.Statement Statement]]s. */
   val connection: Connection = DriverManager.getConnection(jdbcUrl, jdbcUsername, jdbcPassword)
 

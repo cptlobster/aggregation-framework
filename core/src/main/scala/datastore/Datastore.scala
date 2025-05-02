@@ -24,6 +24,9 @@ package datastore
  *           [[dev.cptlobster.aggregation_framework.collector.Collector Collector]]s.
  */
 trait Datastore[K, V] {
+  // String representation of this datastore
+  val datastoreStr: String
+
   /**
    * Push a key/value pair to your datastore.
    * @throws DatastorePushError if the datastore returns an error (malformed query, etc.)

@@ -34,6 +34,7 @@ trait KafkaDatastore[K, V] extends Datastore[K, V] {
   /** Properties to pass to the Kafka producer */
   val kafkaProps: Properties
   private val producer = new KafkaProducer[K, V](kafkaProps)
+  override val datastoreStr: String = s"Kafka Datastore (topic $kafkaTopic)"
 
   def push(key: K, value: V): Unit = {
     val record = new ProducerRecord[K, V](kafkaTopic, key, value)

@@ -25,6 +25,7 @@ import org.openqa.selenium.chrome.{ChromeDriver, ChromeOptions}
  * @tparam T The expected final type of the data. You will need to convert to this yourself.
  */
 trait ChromeCollector[T] extends AbstractSeleniumCollector[T] {
+  override val browser: String = "Chrome"
   protected val options: ChromeOptions = new ChromeOptions().addArguments("--no-sandbox")
   protected val driver: WebDriver = new ChromeDriver(options)
 }

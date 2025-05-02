@@ -23,6 +23,8 @@ import org.openqa.selenium.WebDriver
  * @tparam T The expected final type of the data. You will need to convert to this yourself.
  */
 trait AbstractSeleniumCollector[T] extends Collector[T] {
+  val browser: String
+  override val collectorStr: String = s"Selenium WebDriver Collector ($browser)"
   protected val driver: WebDriver
 
   def get(endpoint: String): Unit = {

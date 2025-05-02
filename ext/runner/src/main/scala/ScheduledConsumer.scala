@@ -85,4 +85,10 @@ trait ScheduledConsumer[K, V] extends Consumer[K, V] {
    * @return the [[Duration]] until the next job is scheduled to run (as calculated by [[next()]]).
    */
   def timeToNext(current: Instant): Duration = next(current).until(current)
+
+  override def toString: String = {
+    s"Scheduled Consumer $name: $collectorStr -> $datastoreStr" +
+      s"  Run every ${interval.toString} starting at ${start.toString}" +
+      s"  Tags: ${tags.mkString(", ")}"
+  }
 }

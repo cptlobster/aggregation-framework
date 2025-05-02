@@ -27,6 +27,7 @@ import sttp.client3.{HttpClientSyncBackend, Identity, Response, SttpBackend, Uri
  *           data.
  */
 trait SttpCollector[T] extends Collector[T] {
+  override val collectorStr: String = "Basic HTTP Collector (sttp)"
   private val sttpBackend: SttpBackend[Identity, Any] = HttpClientSyncBackend()
 
   def query(endpoint: String): T = {
