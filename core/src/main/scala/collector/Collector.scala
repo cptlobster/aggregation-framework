@@ -14,10 +14,12 @@
 package dev.cptlobster.aggregation_framework
 package collector
 
+import org.slf4j.{Logger, LoggerFactory}
+
 /**
  * Base trait for collecting data and parsing it into some type. This will be extended by other traits for specific HTTP
  * implementations (such as [[SttpCollector]] for basic API interactions, or more complex HTTP clients such as
- * scala-scraper or selenium.
+ * scala-scraper or selenium).
  *
  * @tparam T The expected final type of the data. You will need to convert to this yourself.
  */
@@ -27,6 +29,8 @@ trait Collector[T] {
    * Base URL to access. Queries will add endpoint arguments onto this.
    */
   val baseUrl: String
+
+  val logger: Logger = LoggerFactory.getLogger(classOf[Collector[T]])
 
   /**
    * This function should be called for all query processing. It will submit an HTTP query to the endpoint, run the

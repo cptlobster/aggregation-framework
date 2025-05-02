@@ -72,3 +72,9 @@ class DatastoreAuthError(desc: String) extends DatastoreConnectError(desc) {
 class DatastorePushError(desc: String) extends DatastoreException(desc) {
   override val message: String = s"Error pushing entry to datastore: $desc"
 }
+
+/** Entry not found in datastore. This should be used if reading from the datastore and the element doesn't exist, or
+ * the datastore has no data in it. */
+class DatastoreNotFoundError() extends DatastoreException("") {
+  override val message: String = s"Entry not found in datastore, or datastore is empty."
+}

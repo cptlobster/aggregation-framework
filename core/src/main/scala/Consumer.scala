@@ -66,7 +66,7 @@ trait Consumer[K, V] extends Collector[V] with Datastore[K, V] with Runnable {
   /** This consumer's execution rule. */
   val executionRule: ExecutionRule = OneshotRule()
   /** slf4j logger */
-  val logger: Logger = LoggerFactory.getLogger(classOf[Consumer[K, V]])
+  override val logger: Logger = LoggerFactory.getLogger(classOf[Consumer[K, V]])
 
   /**
    * User-defined collection function. This would query your target endpoint, but NOT store it. Retries and errors are

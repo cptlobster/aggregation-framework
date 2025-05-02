@@ -22,6 +22,7 @@ inThisBuild(
 )
 
 // Dependency versions
+lazy val commonsVersion = "1.13.1"
 lazy val TypesafeConfigVersion = "1.4.3"
 lazy val SttpVersion = "3.10.3"
 lazy val Json4sVersion = "4.0.7"
@@ -38,6 +39,8 @@ lazy val core = (project in file("core"))
     name := "aggregation_framework_core",
     description := "Core API and abstractions for Aggregation Framework",
     libraryDependencies := Seq(
+      // Apache Commons libraries
+      "org.apache.commons" % "commons-text" % commonsVersion,
       // slf4j: used for logging
       "org.slf4j" % "slf4j-api" % slf4jVersion,
       // typesafe config: used for configuration

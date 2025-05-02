@@ -14,8 +14,11 @@
 package dev.cptlobster.aggregation_framework
 package datastore
 
+import org.slf4j.{Logger, LoggerFactory}
+
 /**
  * Trait for pushing data to a data store.
+ *
  * @tparam K The type of your database key. This could be something like a [[String]], [[java.util.Date Date]], or a
  *           [[java.util.UUID UUID]], or something else; it depends on how you want to index your data internally (and
  *           what your target datastore supports). Note that this must be a unique value, and ideally this would be
@@ -26,6 +29,8 @@ package datastore
 trait Datastore[K, V] {
   // String representation of this datastore
   val datastoreStr: String
+
+  val logger: Logger = LoggerFactory.getLogger(classOf[Datastore[K, V]])
 
   /**
    * Push a key/value pair to your datastore.
