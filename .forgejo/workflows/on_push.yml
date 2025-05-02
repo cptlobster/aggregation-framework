@@ -4,7 +4,7 @@ on:
       - master
     paths-ignore:
       - "**/README.md"
-      - "**/LICENSE.md"
+      - "**/LICENSE_*.md"
       - ".idea/*"
       - "docs/*"
 

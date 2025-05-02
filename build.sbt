@@ -14,7 +14,7 @@ inThisBuild(
   Seq(
     homepage      := Some(url("https://github.com/cptlobster/aggregation-framework")),
     organization  := "dev.cptlobster",
-    licenses      := Seq("GPLv3" -> url("https://www.gnu.org/licenses/gpl-3.0.en.html")),
+    licenses      := Seq("LGPLv3" -> url("https://www.gnu.org/licenses/lgpl-3.0.html")),
     developers    := List(
       Developer("cptlobster", "Dustin Thomas", "io@cptlobster.dev", url("https://cptlobster.dev"))
     ),
