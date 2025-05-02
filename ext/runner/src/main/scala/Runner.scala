@@ -151,6 +151,19 @@ class Runner extends Callable[Int] {
     0
   }
 
+  @Command(name = "list", description = Array("Print information on all registered consumers"))
+  private def info(): Int = {
+    if (consumers.isEmpty) {
+      logger.error("No consumers are defined! You should extend the Runner class and override the consumers variable.")
+      1
+    }
+    else {
+      logger.info("Listing all consumers...")
+      println(consumers.mkString("\n"))
+      0
+    }
+  }
+
   def call(): Int = {
     printAsciiArt()
     logger.error("No subcommand was provided. Use --help for all available commands.")
