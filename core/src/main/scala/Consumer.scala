@@ -15,11 +15,10 @@ package dev.cptlobster.aggregation_framework
 
 import collector.Collector
 import datastore.Datastore
-import util.RecoverableException
+import util.{ExecutionRule, OneshotRule, RecoverableException}
 
 import java.time.Duration
 import scala.annotation.tailrec
-
 import org.slf4j.{Logger, LoggerFactory}
 
 /**
@@ -64,6 +63,8 @@ trait Consumer[K, V] extends Collector[V] with Datastore[K, V] with Runnable {
   val retries: Int = 2
   /** How long to wait after a failed attempt. */
   val retryDelay: Duration = Duration.ofSeconds(5)
+  /** This consumer's execution rule. */
+  val executionRule: ExecutionRule = OneshotRule()
   /** slf4j logger */
   val logger: Logger = LoggerFactory.getLogger(classOf[Consumer[K, V]])
 

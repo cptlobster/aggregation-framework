@@ -14,7 +14,7 @@
 package dev.cptlobster.aggregation_framework
 
 import picocli.CommandLine
-import picocli.CommandLine.{Command, Help, Option, Parameters}
+import picocli.CommandLine.{Command, Help, Option}
 import jdk.internal.misc.Signal
 
 import java.time.Instant
@@ -36,7 +36,6 @@ import picocli.CommandLine.Help.Ansi
     "     /_/ /_/  \\_,_/_/_/_\\__/|__,__/\\___/_/ /_/\\_\\ ",
     "",
     "A Swiss-army knife library for scraping and processing data from the web. This is the consumer runner application.",
-    "For more info and usage guides: https://forge.cptlobster.dev/cptlobster/aggregation-framework"
   ), exitCodeOnInvalidInput = 2, exitCodeOnExecutionException = 1)
 class Runner extends Callable[Int] {
   /** All declared consumers that can be run. */
@@ -45,10 +44,7 @@ class Runner extends Callable[Int] {
   val logger: Logger = LoggerFactory.getLogger(classOf[Runner])
 
   /** Split out ScheduledConsumers */
-  private val scheduled: List[ScheduledConsumer[Any, Any]] =
-    consumers
-      .filter(_.getClass == classOf[ScheduledConsumer[_, _]])
-      .asInstanceOf[List[ScheduledConsumer[Any, Any]]]
+  private val scheduled: List[Consumer[Any, Any]] = consumers.filter(!_.executionRule.oneshot)
 
   /** All non-scheduled consumers, these will be run all at once */
   private val oneshot: List[Consumer[Any, Any]] = consumers diff scheduled
@@ -64,10 +60,30 @@ class Runner extends Callable[Int] {
     System.err.println("     /_/ /_/  \\_,_/_/_/_\\__/|__,__/\\___/_/ /_/\\_\\ ")
   }
 
+  /* program arguments */
   @Option(names = Array("-d", "--dry-run"), description = Array("Do not push to database; just print to stdout."))
   var dryRun: Boolean = false
   @Option(names = Array("-j", "--jobs"), description = Array("How many consumers can be run concurrently."))
   var jobs: Int = 2
+
+  @Option(names = Array("-n", "--name"), description = Array("Only select the runner with the defined name."))
+  var filterName: String = ""
+  @Option(names = Array("-t", "--tags"), description = Array("Only include the runner(s) that have any of the defined tags."))
+  var filterTags: List[String] = List()
+
+  /** filtered consumers */
+  private val matchingConsumers: List[Consumer[Any, Any]] = {
+    consumers
+      .filter((c: Consumer[Any, Any]) => c.name == filterName || filterName == "")
+      .filter((c: Consumer[Any, Any]) => c.tags.exists((t: String) => filterTags.contains(t)))
+  }
+  /** Split out ScheduledConsumers */
+  private val matchingScheduled: List[Consumer[Any, Any]] = matchingConsumers.filter(!_.executionRule.oneshot)
+
+  /** All non-scheduled consumers, these will be run all at once */
+  private val matchingOneshot: List[Consumer[Any, Any]] = matchingConsumers diff matchingScheduled
+
+  /* helpers */
 
   /** Run a single consumer, print errors to console. */
   private def run(cons: Consumer[Any, Any]): Int = {
@@ -92,37 +108,56 @@ class Runner extends Callable[Int] {
 
     // TODO: make this threaded
     // throw an error if consumers is empty
-    if (consumers.isEmpty) {
-      logger.error("No consumers are defined! You should extend the Runner class and override the consumers variable.")
+    if (matchingConsumers.isEmpty) {
+      if (matchingConsumers.size != consumers.size) {
+        logger.error("No consumers found! Please check your filters, or extend the Runer class and override the consumers variable.")
+      }
+      else {
+        logger.error("No consumers are defined! You should extend the Runner class and override the consumers variable.")
+      }
       1
     }
     // if there are consumers, check if --run-scheduled-consumers is true, and run all consumers if so
     else if (runScheduledAsOneShot) {
       logger.info("Running all consumers...")
-      val result = (for (cons <- consumers) yield {
+      val result = (for (cons <- matchingConsumers) yield {
         run(cons)
       }).sum
       logger.info("Completed, {} out of {} consumers ran successfully.", result, consumers.size)
-      if (result == consumers.size) { 0 } else { 1 }
+      if (result == matchingConsumers.size) { 0 } else { 1 }
     }
     // otherwise, we're only running oneshot consumers. throw an error if there aren't any.
-    else if (oneshot.isEmpty) {
-      logger.error("No oneshot consumers are defined! You may want to run scheduled jobs instead, set --run-scheduled-consumers, or add a consumer to your Runner class.")
+    else if (matchingOneshot.isEmpty) {
+      if (matchingConsumers.size != consumers.size) {
+        logger.error("No oneshot consumers found! Please check your filters, run scheduled jobs instead, set --run-scheduled-consumers, or add a consumer to your Runner class.")
+      }
+      else {
+        logger.error("No oneshot consumers are defined! You may want to run scheduled jobs instead, set --run-scheduled-consumers, or add a consumer to your Runner class.")
+      }
       1
     }
     // we should have consumers at this point. run all one-shot consumers sequentially.
     else {
       logger.info("Running oneshot consumers...")
-      val result = (for (cons <- oneshot) yield {
+      val result = (for (cons <- matchingOneshot) yield {
         run(cons)
       }).sum
       logger.info("Completed, {} out of {} consumers ran successfully.", result, oneshot.size)
-      if (result == oneshot.size) { 0 } else { 1 }
+      if (result == matchingOneshot.size) { 0 } else { 1 }
     }
   }
 
   @Command(name = "daemon", description = Array("Run the scheduled consumer daemon."))
   private def runDaemon(): Int = {
+    if (matchingScheduled.isEmpty) {
+      if (matchingConsumers.size != consumers.size) {
+        logger.error("No scheduled consumers found! Please check your filters, run oneshot jobs instead, or add a consumer to your Runner class.")
+      }
+      else {
+        logger.error("No oneshot consumers are defined! You may want to run oneshot jobs instead, or add a consumer to your Runner class.")
+      }
+      1
+    }
     printAsciiArt()
     logger.debug("Initializing scheduler and thread pool...")
     val latch: CountDownLatch = new CountDownLatch(1);
@@ -140,7 +175,7 @@ class Runner extends Callable[Int] {
     )
 
     // add all ScheduledConsumers to the thread pool
-    for (cons <- scheduled) {
+    for (cons <- matchingScheduled) {
       val initialDelay = cons.timeToNext(Instant.now())
       executor.scheduleRepeating(Task(cons, dryRun), initialDelay, cons.interval)
     }
@@ -153,9 +188,17 @@ class Runner extends Callable[Int] {
 
   @Command(name = "list", description = Array("Print information on all registered consumers"))
   private def info(): Int = {
-    if (consumers.isEmpty) {
-      logger.error("No consumers are defined! You should extend the Runner class and override the consumers variable.")
-      1
+    printAsciiArt()
+
+    if (matchingConsumers.isEmpty) {
+      if (matchingConsumers.size != consumers.size) {
+        logger.info("No defined consumers match your filters.")
+        0
+      }
+      else {
+        logger.error("No consumers are defined! You should extend the Runner class and override the consumers variable.")
+        1
+      }
     }
     else {
       logger.info("Listing all consumers...")
