@@ -105,26 +105,22 @@ TODO: write
 
 ## Making Your Consumers Repeatable
 
-*Note: This section applies if you are using `aggregation-framework-runner`. If you are integrating Aggregation
-Framework into another application, you will need to handle scheduling yourself.*
-
-You can adjust your consumer to implement the `ScheduledConsumer` trait instead.
+Each `Consumer` has an `ExecutionRule` defined, which will give the runner a policy on when/how the consumer should be
+executed. By default, the consumer has a `OneshotRule`, which means it will launch once when Aggregation Framework's
+runner is invoked. We can override this with a scheduled execution rule.
 
 ```scala
-// add these imports...
-import dev.cptlobster.aggregation_framework.ScheduledConsumer
+// first add these imports...
+import dev.cptlobster.aggregation_framework.util.{ExecutionRule, SimpleScheduledRule}
 import java.time.{Duration, Instant}
 
-// ...then replace the extends on your consumer with this list...
 case class TutorialConsumer()
-  extends ScheduledConsumer[String, String] // always extend the Consumer trait first!
-  with JsonCollector[String] // Since we're parsing JSON data, extend the JSONCollector trait
-  with KafkaDatastore[String, String] // Since we're pushing to a Kafka datastore, extend the KafkaDatastore trait
+  extends Consumer[String, String]
+  with JsonCollector[String]
+  with KafkaDatastore[String, String]
 {
-  // ...then define the start of your consumer (for this case, we'll use its initialization)...
-  val start: Instant = Instant.now()
-  // ...finally, define the interval on which it runs (we want it to run every 30 seconds)
-  val interval: Duration = Duration.ofSeconds(30)
+  // ...then, define the interval on which it runs (we want it to run every 30 seconds)
+  override val executionRule: ExecutionRule = SimpleScheduledRule(Duration.ofSeconds(30))
   
   // rest of consumer...
 }
