@@ -69,3 +69,9 @@ such as GraphQL or HTTP GET requests. These come in two parts:
   request accordingly.
 - The Builder classes are used to assemble your queries, and are passed to the `query()` function in your consumer (this
   function will be augmented by the Mixin trait to support the query builder).
+
+## Runner
+We provide a Runner executable that you can add Consumers to. This runner provides support for "one-shot" consumers
+(consumers that only run once at launch) and "scheduled" consumers (consumers that run at a regular interval). While you
+*can* implement your own runner, or use Aggregation Framework consumers in your own program, this provides an easy
+entrypoint for running and testing your consumers.

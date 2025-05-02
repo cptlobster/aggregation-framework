@@ -68,7 +68,8 @@ graph BT
     JSON[aggregation-framework-json]
     KAFKA[aggregation-framework-kafka]
     SEL[aggregation-framework-selenium]
-    CORE --> JSON & KAFKA & SEL
+    RUNNER[aggregation-framework-runner]
+    CORE --> JSON & KAFKA & SEL & RUNNER
 ```
 
 ## Development

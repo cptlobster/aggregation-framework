@@ -44,32 +44,12 @@ class ScheduledThreadPoolExecutor(threads: Int,
 
   /**
    * Schedule a function to execute at a specific time.
-   * @param f The function to execute
-   * @param time The [[Instant]] at which this function should run
-   * @return A [[ScheduledFuture]] for the function run
-   */
-  def schedule(f: () => Unit, time: Instant): ScheduledFuture[_] = {
-    executor.schedule(Task(f), toMillis(time), TimeUnit.MILLISECONDS)
-  }
-
-  /**
-   * Schedule a function to execute at a specific time.
    * @param task the [[Runnable]] to execute
    * @param time The [[Instant]] at which this function should run
    * @return A [[ScheduledFuture]] for the function run
    */
   def schedule(task: Runnable, time: Instant): ScheduledFuture[_] = {
     executor.schedule(task, toMillis(time), TimeUnit.MILLISECONDS)
-  }
-
-  /**
-   * Schedule a function to execute after a delay.
-   * @param f The function to execute
-   * @param delay The [[Duration]] this function should wait to run
-   * @return A [[ScheduledFuture]] for the function run
-   */
-  def schedule(f: () => Unit, delay: Duration): ScheduledFuture[_] = {
-    executor.schedule(Task(f), toMillis(delay), TimeUnit.MILLISECONDS)
   }
 
   /**
@@ -156,6 +136,38 @@ class ScheduledThreadPoolExecutor(threads: Int,
    */
   def scheduleRepeating(f: () => Unit, period: Duration): ScheduledFuture[_] = {
     executor.scheduleAtFixedRate(Task(f), 0, toMillis(period), TimeUnit.MILLISECONDS)
+  }
+
+  /**
+   * Schedule a task to repeat automatically.
+   * @param task the [[Runnable]] to execute
+   * @param initialTime The time that this function should first run
+   * @param period The delay between each subsequent execution
+   * @return A [[ScheduledFuture]] for the function run
+   */
+  def scheduleRepeating(task: Runnable, initialTime: Instant, period: Duration): ScheduledFuture[_] = {
+    executor.scheduleAtFixedRate(task, toMillis(initialTime), toMillis(period), TimeUnit.MILLISECONDS)
+  }
+
+  /**
+   * Schedule a task to repeat automatically.
+   * @param task the [[Runnable]] to execute
+   * @param initialDelay The time that this function should wait to run for the first time
+   * @param period The delay between each subsequent execution
+   * @return A [[ScheduledFuture]] for the function run
+   */
+  def scheduleRepeating(task: Runnable, initialDelay: Duration, period: Duration): ScheduledFuture[_] = {
+    executor.scheduleAtFixedRate(task, toMillis(initialDelay), toMillis(period), TimeUnit.MILLISECONDS)
+  }
+
+  /**
+   * Schedule a task to run instantly and repeat automatically.
+   * @param task the [[Runnable]] to execute
+   * @param period The delay between each subsequent execution
+   * @return A [[ScheduledFuture]] for the function run
+   */
+  def scheduleRepeating(task: Runnable, period: Duration): ScheduledFuture[_] = {
+    executor.scheduleAtFixedRate(task, 0, toMillis(period), TimeUnit.MILLISECONDS)
   }
 
   /**

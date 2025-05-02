@@ -88,7 +88,7 @@ trait Consumer[K, V] extends Collector[V] with Datastore[K, V] with Runnable {
    */
   def dryRun(): Unit = {
     val (k: K, v: V) = runCollect(retries + 1)
-    logger.info(s"$k: $v")
+    println(s"$k: $v")
   }
 
   /**
@@ -98,7 +98,7 @@ trait Consumer[K, V] extends Collector[V] with Datastore[K, V] with Runnable {
    *
    * @param attempts The amount of attempts this function has left.
    */
-  @tailrec private def runCollect(attempts: Int): (K, V) = {
+  private def runCollect(attempts: Int): (K, V) = {
     try {
       collect()
     } catch {

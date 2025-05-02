@@ -16,6 +16,7 @@
     <orderEntry type="library" name="sbt: scala-sdk-2.13.16" level="project" />
     <orderEntry type="module" module-name="dev.aggregation_framework.aggregation_framework_core" />
     <orderEntry type="library" name="sbt: info.picocli:picocli:4.7.7:jar" level="project" />
+    <orderEntry type="library" name="sbt: info.picocli:picocli-codegen:4.7.7:jar" level="project" />
     <orderEntry type="library" name="sbt: org.slf4j:slf4j-simple:2.0.17:jar" level="project" />
     <orderEntry type="library" name="sbt: org.slf4j:slf4j-api:2.0.17:jar" level="project" />
     <orderEntry type="library" name="sbt: com.typesafe:config:1.4.3:jar" level="project" />

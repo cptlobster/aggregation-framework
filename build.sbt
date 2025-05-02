@@ -98,6 +98,7 @@ lazy val runner = (project in file("ext/runner"))
     libraryDependencies := Seq(
       // picocli
       "info.picocli" % "picocli" % picoCliVersion,
+      "info.picocli" % "picocli-codegen" % picoCliVersion,
       // logging
       "org.slf4j" % "slf4j-simple" % slf4jVersion
     )
