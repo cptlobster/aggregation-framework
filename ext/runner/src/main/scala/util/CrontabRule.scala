@@ -3,7 +3,11 @@ package util
 
 import java.time.Instant
 
-class CrontabRule(crontab: Crontab) extends ExecutionRule {
+/**
+ * Scheduling rule for a job repeating on a regular interval. In this case, the job is defined by a cron expression.
+ * @param crontab The [[CronExpr]] object that defines this job's repeated execution.
+ */
+class CrontabRule(crontab: CronExpr) extends ExecutionRule {
   /** If enabled, job will only run once. */
   override val oneshot: Boolean = false
 
@@ -18,7 +22,7 @@ class CrontabRule(crontab: Crontab) extends ExecutionRule {
 }
 
 object CrontabRule {
-  def apply(crontab: Crontab): CrontabRule = {
+  def apply(crontab: CronExpr): CrontabRule = {
     new CrontabRule(crontab)
   }
 }

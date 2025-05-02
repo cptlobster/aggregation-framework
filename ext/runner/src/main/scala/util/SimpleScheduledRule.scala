@@ -1,20 +1,31 @@
+/* Copyright (C) 2025  Dustin Thomas <io@cptlobster.dev>
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see
+ * <https://www.gnu.org/licenses/>.
+ */
 package dev.cptlobster.aggregation_framework
 package util
 
 import java.time.{Duration, Instant}
 import scala.annotation.tailrec
 
+/**
+ * Scheduling rule for a job that repeats on a regular interval. This uses a start time and an interval, and calculates
+ * next execution times by adding the interval repeatedly to the start time.
+ * @param start The [[Instant]] that the "first" job should happen.
+ * @param interval The [[Duration]] between repeated jobs.
+ */
 class SimpleScheduledRule(start: Instant, interval: Duration) extends ExecutionRule {
-  /** If enabled, job will only run once. */
   override val oneshot: Boolean = false
 
-  /**
-   * Return the next time the attached [[dev.cptlobster.aggregation_framework.collector.Collector Collector]] is
-   * scheduled to run.
-   *
-   * @param from The [[Instant]] to calculate next execution time from.
-   * @return The [[Instant]] this job should execute.
-   */
   override def next(from: Instant): Instant = next(from, start)
 
   @tailrec private def next(from: Instant, acc: Instant): Instant = {

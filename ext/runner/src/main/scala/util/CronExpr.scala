@@ -15,7 +15,7 @@ package dev.cptlobster.aggregation_framework
 package util
 
 /**
- * Crontab representation for declaring [[ScheduledConsumer]]s. The class stores values as [[Option]]s, if they are set
+ * CronExpr representation for declaring [[ScheduledConsumer]]s. The class stores values as [[Option]]s, if they are set
  * to [[None]] that will count as a *.
  *
  * @param minute The minute at which the job should execute.
@@ -24,11 +24,11 @@ package util
  * @param month The month of the year that the job should execute on.
  * @param dayOfWeek The day of the week that the job should execute on.
  */
-class Crontab(minute: Option[Int],
-              hour: Option[Int],
-              dayOfMonth: Option[Int],
-              month: Option[Int],
-              dayOfWeek: Option[Int]) {
+class CronExpr(minute: Option[Int],
+               hour: Option[Int],
+               dayOfMonth: Option[Int],
+               month: Option[Int],
+               dayOfWeek: Option[Int]) {
 
   /** Check if the numeric values of the crontab are valid. */
   def validate(): Boolean = {
@@ -41,7 +41,7 @@ class Crontab(minute: Option[Int],
   }
 
   if (!validate()) {
-    throw new IllegalArgumentException("Crontab argument is invalid")
+    throw new IllegalArgumentException("CronExpr argument is invalid")
   }
 
   override def toString: String = {
@@ -55,12 +55,12 @@ class Crontab(minute: Option[Int],
   }
 }
 
-object Crontab {
-  def apply(crontab: String): Crontab = {
+object CronExpr {
+  def apply(crontab: String): CronExpr = {
     ???
   }
 
-  def apply(minute: Int, hour: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): Crontab = {
+  def apply(minute: Int, hour: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): CronExpr = {
 
     ???
   }

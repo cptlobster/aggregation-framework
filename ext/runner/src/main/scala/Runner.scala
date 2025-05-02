@@ -176,8 +176,9 @@ class Runner extends Callable[Int] {
 
     // add all ScheduledConsumers to the thread pool
     for (cons <- matchingScheduled) {
-      val initialDelay = cons.timeToNext(Instant.now())
-      executor.scheduleRepeating(Task(cons, dryRun), initialDelay, cons.interval)
+      val initialDelay = cons.executionRule.timeToNext(Instant.now())
+      // this will schedule the first execution; each runner will queue its successive execution
+      executor.schedule(Task(cons, dryRun, executor), initialDelay)
     }
 
     logger.info("All jobs scheduled successfully. Runner can be stopped using SIGINT (Ctrl+C).")
@@ -221,13 +222,30 @@ object Runner extends App {
   System.exit(cli.execute(args: _*))
 }
 
-case class Task(cons: Consumer[Any, Any], dryRun: Boolean) extends Runnable {
+/**
+ * Task for daemon to run.
+ * @param cons [[Consumer]] to execute.
+ * @param dryRun If enabled, [[Consumer]] will print to stdout; otherwise, will push to configured
+ *               [[dev.cptlobster.aggregation_framework.datastore.Datastore Datastore]]
+ * @param executor The [[ScheduledThreadPoolExecutor]] to queue the next job to
+ */
+case class Task(cons: Consumer[Any, Any], dryRun: Boolean, executor: ScheduledThreadPoolExecutor) extends Runnable {
   val logger: Logger = LoggerFactory.getLogger(classOf[Task])
-  override def run(): Unit = try {
-    if (dryRun) { cons.dryRun() } else { cons.run() }
-    logger.debug(s"Consumer succeeded.")
-  } catch {
-    case e: Exception =>
-      logger.error(s"Consumer failed after ${cons.retries} attempts: ${e.getMessage}")
+
+  override def run(): Unit = {
+    // try to run the consumer
+    try {
+      if (dryRun) {
+        cons.dryRun()
+      } else {
+        cons.run()
+      }
+      logger.debug(s"Consumer succeeded.")
+    } catch {
+      case e: Exception =>
+        logger.error(s"Consumer failed after ${cons.retries} attempts: ${e.getMessage}")
+    }
+    // queue the next one
+    executor.schedule(Task(cons, dryRun, executor), cons.executionRule.next())
   }
 }
