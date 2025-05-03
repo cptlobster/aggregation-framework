@@ -15,7 +15,6 @@ package dev.cptlobster.aggregation_framework
 
 import picocli.CommandLine
 import picocli.CommandLine.{Command, Help, Option}
-import jdk.internal.misc.Signal
 
 import java.time.Instant
 import util.ScheduledThreadPoolExecutor
@@ -23,6 +22,7 @@ import util.ScheduledThreadPoolExecutor
 import java.util.concurrent.{Callable, CountDownLatch}
 import org.slf4j.{Logger, LoggerFactory}
 import picocli.CommandLine.Help.Ansi
+import sun.misc.{Signal, SignalHandler}
 
 @Command(name = "aggregation-framework", mixinStandardHelpOptions = true,
   version = Array("aggregation-framework 0.0.1-SNAPSHOT"), description = Array(
@@ -58,6 +58,7 @@ class Runner extends Callable[Int] {
     System.err.println("       / __/______ ___ _ ___ _    _____  ____/ /__")
     System.err.println("      / _// __/ _ `/  ' / -_| |/|/ / _ \\/ __/  '_/")
     System.err.println("     /_/ /_/  \\_,_/_/_/_\\__/|__,__/\\___/_/ /_/\\_\\ ")
+    System.err.println("This program is free software. Run `aggregation-framework info` for more information.")
   }
 
   /* program arguments */
@@ -166,13 +167,15 @@ class Runner extends Callable[Int] {
     executor.setRunScheduledTasksAfterShutdown(false)
 
     // Stop execution if SIGINT is triggered (Ctrl+C)
-    Signal.handle(new Signal("INT"),  // SIGINT
-      _ => {
-        logger.debug("User interrupt. Shutting down thread pool.")
+    case class SigintHandler() extends SignalHandler {
+      override def handle(sig: Signal): Unit = {
+        logger.info("User interrupt. Shutting down thread pool.")
         executor.shutdown()
         latch.countDown()
       }
-    )
+    }
+
+    Signal.handle(new Signal("INT"), SigintHandler())
 
     // add all ScheduledConsumers to the thread pool
     for (cons <- matchingScheduled) {
@@ -188,7 +191,7 @@ class Runner extends Callable[Int] {
   }
 
   @Command(name = "list", description = Array("Print information on all registered consumers"))
-  private def info(): Int = {
+  private def listRunners(): Int = {
     printAsciiArt()
 
     if (matchingConsumers.isEmpty) {
@@ -206,6 +209,34 @@ class Runner extends Callable[Int] {
       println(consumers.mkString("\n"))
       0
     }
+  }
+
+  @Command(name = "info", description = Array("Print information about library and license"))
+  private def info(): Int = {
+    println("   ___                              __  _         ")
+    println("  / _ |___ ____ ________ ___ ____ _/ /_(____  ___ ")
+    println(" / __ / _ `/ _ `/ __/ -_/ _ `/ _ `/ __/ / _ \\/ _ \\")
+    println("/_/ |_\\_, /\\_, /_/  \\__/\\_, /\\_,_/\\__/_/\\___/_//_/")
+    println("     /___//___/        /___/                  __  ")
+    println("       / __/______ ___ _ ___ _    _____  ____/ /__")
+    println("      / _// __/ _ `/  ' / -_| |/|/ / _ \\/ __/  '_/")
+    println("     /_/ /_/  \\_,_/_/_/_\\__/|__,__/\\___/_/ /_/\\_\\ ")
+    println("Aggregation Framework Runner version 0.0.1-SNAPSHOT")
+    println("")
+    println("Copyright (C) 2025  Dustin Thomas <io@cptlobster.dev>")
+    println("")
+    println("This program is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General")
+    println("Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any")
+    println("later version.")
+    println("")
+    println("This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied")
+    println("warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more")
+    println("details.")
+    println("")
+    println("You should have received a copy of the GNU Lesser General Public License (and the GNU General Public License) along")
+    println("with this program. If not, see <https://www.gnu.org/licenses/>.")
+    println("")
+    0
   }
 
   def call(): Int = {
