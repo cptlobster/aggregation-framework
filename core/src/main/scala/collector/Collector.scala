@@ -14,7 +14,10 @@
 package dev.cptlobster.aggregation_framework
 package collector
 
+import dev.cptlobster.aggregation_framework.util.{AuthError, RateLimitError, RequestError, ServerError}
 import org.slf4j.{Logger, LoggerFactory}
+
+import scala.math.floor
 
 /**
  * Base trait for collecting data and parsing it into some type. This will be extended by other traits for specific HTTP
@@ -44,4 +47,31 @@ trait Collector[T] {
    * @throws ConsumerException on any other exception
    */
   def query(endpoint: String): T
+
+  /**
+   * Error handler for all HTTP errors.
+   * @param code The offending HTTP status code
+   * @param endpoint The endpoint queried
+   * @param desc A textual description of the HTTP status code
+   * @param body The request body
+   * @param headers Any response headers
+   * @return The request body if the HTTP status code is not an error
+   * @throws AuthError if an authentication error occurs (HTTP 401, 403)
+   * @throws RateLimitError if a rate limit is hit (HTTP 420, 429)
+   * @throws RequestError on any other 400 error
+   * @throws ServerError on any 500 error
+   */
+  protected def httpErrorHandler(code: Int, endpoint: String, desc: String = "", body: String = "", headers: Map[String, String] = Map()): String = {
+    floor(code / 100) match {
+      case 4 => code match {
+        case 401 => throw new AuthError(401, endpoint, desc, body)
+        case 403 => throw new AuthError(403, endpoint, desc, body)
+        case 420 => throw new RateLimitError(420, endpoint, desc, body)
+        case 429 => throw new RateLimitError(429, endpoint, desc, body)
+        case _ => throw new RequestError(code, endpoint, desc, body)
+      }
+      case 5 => throw new ServerError(code, endpoint, desc, body)
+    }
+    body // it is highly unlikely that this will be reached
+  }
 }

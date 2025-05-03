@@ -72,13 +72,14 @@ trait SttpCollector[T] extends Collector[T] {
   def handleResponse(endpoint: String, response: Response[Either[String, String]]): String = {
     response.body match {
       case Right(v) => v
-      case Left(e) => throw new APIError(response.code.code, endpoint, response.statusText, e)
+      case Left(e) => httpErrorHandler(response.code.code, endpoint, response.statusText, e)
     }
   }
 
   /**
    * Parse a string input and convert it into your intended type. You will need to define this based on the input format
-   * you're using, but other collector traits (such as [[JsonCollector]]) will implement this for you.
+   * you're using, but other collector traits (such as
+   * [[dev.cptlobster.aggregation_framework.collector.JsonCollector JsonCollector]]) will implement this for you.
    * @param content The response body returned from [[get]] or [[post]]
    * @return The intended response data
    */

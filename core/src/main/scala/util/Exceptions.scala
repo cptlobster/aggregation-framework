@@ -30,8 +30,26 @@ class ConsumerException(desc: String) extends Exception {
 }
 
 /** Base class for API-induced errors (for example, non-200 HTTP error codes) */
-class APIError(status: Int, endpoint: String = "", desc: String = "", body: String = "") extends ConsumerException(desc) with RecoverableException {
-  override val message: String = s"Endpoint error HTTP $status: $desc"
+class APIError(status: Int, endpoint: String = "", desc: String = "", body: String = "") extends ConsumerException(desc) {
+  override val message: String = s"Endpoint returned HTTP $status: $desc"
+}
+
+/** General request errors (400s) */
+class RequestError(status: Int, endpoint: String = "", desc: String = "", body: String = "")
+  extends APIError(status, endpoint, desc, body) {
+  override val message: String = s"Request returned an error (HTTP $status: $desc)"
+}
+
+/** Authentication-specific errors (401, 403) */
+class AuthError(status: Int, endpoint: String = "", desc: String = "", body: String = "")
+  extends RequestError(status, endpoint, desc, body) {
+  override val message: String = s"Authentication error (HTTP $status: $desc)"
+}
+
+/** Server-side errors (500s) */
+class ServerError(status: Int, endpoint: String = "", desc: String = "", body: String = "")
+  extends APIError(status, endpoint, desc, body) with RecoverableException {
+  override val message: String = s"Internal server error (HTTP $status: $desc)"
 }
 
 /**
@@ -39,7 +57,7 @@ class APIError(status: Int, endpoint: String = "", desc: String = "", body: Stri
  * expires.
  */
 class RateLimitError(status: Int, endpoint: String = "", desc: String = "", body: String = "", retryAfter: Option[Duration] = None)
-  extends APIError(status, endpoint, desc, body) {
+  extends APIError(status, endpoint, desc, body) with RecoverableException {
   override val message: String = s"Endpoint ratelimit reached (HTTP $status: $desc)"
 }
 
