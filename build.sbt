@@ -24,11 +24,11 @@ inThisBuild(
 // Dependency versions
 lazy val commonsVersion = "1.13.1"
 lazy val TypesafeConfigVersion = "1.4.3"
-lazy val SttpVersion = "3.10.3"
+lazy val SttpVersion = "3.11.0"
 lazy val Json4sVersion = "4.0.7"
 lazy val ScalaScraperVersion = "3.1.3"
-lazy val SeleniumVersion = "4.29.0"
-lazy val KafkaVersion = "3.9.0"
+lazy val SeleniumVersion = "4.31.0"
+lazy val KafkaVersion = "4.0.0"
 lazy val picoCliVersion = "4.7.7"
 lazy val slf4jVersion = "2.0.17"
 
