@@ -24,13 +24,17 @@ inThisBuild(
 // Dependency versions
 lazy val commonsVersion = "1.13.1"
 lazy val TypesafeConfigVersion = "1.4.3"
-lazy val SttpVersion = "3.11.0"
+lazy val SttpVersion = "4.0.3"
 lazy val Json4sVersion = "4.0.7"
 lazy val ScalaScraperVersion = "3.1.3"
 lazy val SeleniumVersion = "4.31.0"
 lazy val KafkaVersion = "4.0.0"
 lazy val picoCliVersion = "4.7.7"
 lazy val slf4jVersion = "2.0.17"
+lazy val pgDriverVersion = "42.7.5"
+// testing dependency versions
+lazy val testContainersVersion = "1.21.0"
+lazy val munitVersion = "1.1.1"
 
 // Core project
 lazy val core = (project in file("core"))
@@ -46,9 +50,11 @@ lazy val core = (project in file("core"))
       // typesafe config: used for configuration
       "com.typesafe" % "config" % TypesafeConfigVersion,
       // sttp: used for most Collectors
-      "com.softwaremill.sttp.client3" %% "core" % SttpVersion,
+      "com.softwaremill.sttp.client4" %% "core" % SttpVersion,
       // scala-scraper: used for parsing HTML in HTMLCollector
-      "net.ruippeixotog" %% "scala-scraper" % ScalaScraperVersion
+      "net.ruippeixotog" %% "scala-scraper" % ScalaScraperVersion,
+      // PostgreSQL JDBC driver
+      "org.postgresql" % "postgresql" % pgDriverVersion
     )
   )
 
@@ -109,15 +115,18 @@ lazy val runner = (project in file("ext/runner"))
 
 // Full project build
 lazy val root = (project in file("."))
-  .aggregate(
-    core,
-    json,
-    kafka,
-    selenium,
-    runner
-  )
+  .dependsOn(core)
+  .dependsOn(kafka)
+  .dependsOn(selenium)
+  .dependsOn(runner)
+  .dependsOn(json)
   .settings(
     common,
     name := "aggregation_framework",
     description := "A Swiss-army knife data scraping and processing framework.",
+    libraryDependencies := Seq(
+      "org.scalameta" %% "munit" % munitVersion % Test,
+      "org.testcontainers" % "testcontainers" % testContainersVersion % Test,
+      "org.testcontainers" % "postgresql" % testContainersVersion % Test
+    )
   )

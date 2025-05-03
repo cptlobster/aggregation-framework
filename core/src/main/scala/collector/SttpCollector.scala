@@ -16,7 +16,8 @@ package collector
 
 import util.APIError
 
-import sttp.client3.{HttpClientSyncBackend, Identity, Response, SttpBackend, UriContext, basicRequest}
+import sttp.client4.{DefaultSyncBackend, Response, UriContext, basicRequest}
+import sttp.model.Uri
 
 /**
  * Handles collecting data from an HTTP endpoint and parsing it into some type. All collectors should implement some
@@ -28,7 +29,7 @@ import sttp.client3.{HttpClientSyncBackend, Identity, Response, SttpBackend, Uri
  */
 trait SttpCollector[T] extends Collector[T] {
   override val collectorStr: String = "Basic HTTP Collector (sttp)"
-  private val sttpBackend: SttpBackend[Identity, Any] = HttpClientSyncBackend()
+  private val sttpBackend = DefaultSyncBackend()
 
   def query(endpoint: String): T = {
     this.convert(this.get(endpoint))
@@ -41,7 +42,8 @@ trait SttpCollector[T] extends Collector[T] {
    * @return The response body if successful.
    */
   protected def get(endpoint: String): String = {
-    val url = uri"$baseUrl$endpoint"
+    println(baseUrl)
+    val url = uri"${s"$baseUrl$endpoint"}"
     val response = basicRequest.get(url).send(sttpBackend)
 
     handleResponse(endpoint, response)

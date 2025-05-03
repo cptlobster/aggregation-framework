@@ -16,7 +16,7 @@ package datastore
 
 import util.{DatastoreException, DatastorePushError}
 
-import java.sql.{Connection, DriverManager, PreparedStatement, SQLException}
+import java.sql.{Connection, DriverManager, PreparedStatement, SQLException, Statement}
 
 /**
  * Trait for pushing data to an SQL datastore (using JDBC).
@@ -40,10 +40,13 @@ trait SQLDatastore[K, V] extends Datastore[K, V] {
   override val datastoreStr: String = s"SQL Datastore ($jdbcUrl)"
 
   /** The SQL connection. You will need to use this when assembling your [[java.sql.Statement Statement]]s. */
-  val connection: Connection = DriverManager.getConnection(jdbcUrl, jdbcUsername, jdbcPassword)
+  def connection: Connection = DriverManager.getConnection(jdbcUrl, jdbcUsername, jdbcPassword)
+  /** An SQL Statement to setup the database. */
+  val schema: PreparedStatement
 
   def push(key: K, value: V): Unit = {
     try {
+      schema.executeUpdate()
       val stmt: PreparedStatement = buildQuery(key, value)
       stmt.executeUpdate()
     }
