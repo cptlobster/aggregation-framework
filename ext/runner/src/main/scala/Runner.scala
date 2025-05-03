@@ -150,16 +150,17 @@ class Runner extends Callable[Int] {
 
   @Command(name = "daemon", description = Array("Run the scheduled consumer daemon."))
   private def runDaemon(): Int = {
+    printAsciiArt()
+
     if (matchingScheduled.isEmpty) {
       if (matchingConsumers.size != consumers.size) {
         logger.error("No scheduled consumers found! Please check your filters, run oneshot jobs instead, or add a consumer to your Runner class.")
       }
       else {
-        logger.error("No oneshot consumers are defined! You may want to run oneshot jobs instead, or add a consumer to your Runner class.")
+        logger.error("No scheduled consumers are defined! You may want to run oneshot jobs instead, or add a consumer to your Runner class.")
       }
-      1
+      return 1
     }
-    printAsciiArt()
     logger.debug("Initializing scheduler and thread pool...")
     val latch: CountDownLatch = new CountDownLatch(1);
     // create the ScheduledThreadPoolExecutor
