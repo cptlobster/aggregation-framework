@@ -1,3 +1,16 @@
+/* Copyright (C) 2025  Dustin Thomas <io@cptlobster.dev>
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License (and the GNU General Public License) along
+ * with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 package dev.cptlobster.aggregation_framework
 package consumer
 
@@ -8,47 +21,28 @@ import org.postgresql.util.PSQLException
 
 import java.sql.{PreparedStatement, Statement}
 
+/**
+ * Test Consumer #1: use sttp to query the Hello World API and save it to an SQL database. URL parameters are provided
+ * in the constructor since testcontainers generates them automatically
+ * @param baseUrl The API URL
+ * @param jdbcUrl The Postgres database URL
+ * @param jdbcUsername The database username
+ * @param jdbcPassword The database password
+ */
 case class TestSttpConsumer(baseUrl: String, jdbcUrl: String, jdbcUsername: String, jdbcPassword: String)
   extends Consumer[Int, String]
   with SttpCollector[String]
   with SQLDatastore[Int, String] {
 
-  /** The name of this collector. Must be unique between all collectors. */
   override val name: String = "TestSttpConsumer"
-  /** The tags that this collector has. */
   override val tags: List[String] = List("test", "sttp", "hello")
 
-  /**
-   * User-defined collection function. This would query your target endpoint, but NOT store it. Retries and errors are
-   * handled by the [[run()]] function, so they will not need to be implemented here.
-   */
   override def collect(): (Int, String) = (latestKey + 1, get("/"))
 
-  /**
-   * Parse a string input and convert it into your intended type. You will need to define this based on the input format
-   * you're using, but other collector traits (such as
-   * [[dev.cptlobster.aggregation_framework.collector.JsonCollector JsonCollector]]) will implement this for you.
-   *
-   * @param content The response body returned from [[get]] or [[post]]
-   * @return The intended response data
-   */
   override def convert(content: String): String = content
 
   override val schema: PreparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS hello (key INTEGER, val VARCHAR(30));")
 
-  /**
-   * Build a [[PreparedStatement]] using your query results. You will need to define how the data is inserted into your
-   * statement based on your database schema.
-   *
-   * This statement will likely follow the form of:
-   * {{{
-   * INSERT INTO table (key, value) VALUES (?, ?);
-   * }}}
-   *
-   * @param key   The primary key of your database
-   * @param value The values
-   * @return A [[PreparedStatement]] containing all your data.
-   */
   override def buildQuery(key: Int, value: String): PreparedStatement = {
     val stmt = connection.prepareStatement("INSERT INTO hello(key, val) VALUES (?, ?);")
     stmt.setInt(1, key)
@@ -56,7 +50,6 @@ case class TestSttpConsumer(baseUrl: String, jdbcUrl: String, jdbcUsername: Stri
     stmt
   }
 
-  /** Get the key of the newest record pushed to the database. */
   override def latestKey: Int = {
     val stmt = connection.createStatement()
     val result = try {
@@ -69,7 +62,6 @@ case class TestSttpConsumer(baseUrl: String, jdbcUrl: String, jdbcUsername: Stri
     result
   }
 
-  /** Get a value from the database by key. */
   override def get(key: Int): String = {
     val stmt = connection.prepareStatement("SELECT val FROM hello WHERE key = ?;")
     stmt.setInt(1, key)
