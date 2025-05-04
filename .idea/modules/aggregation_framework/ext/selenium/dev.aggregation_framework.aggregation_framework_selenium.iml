@@ -3,7 +3,7 @@
   <component name="DisplayModuleName">
     <option name="name" value="aggregation_framework_selenium" />
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_23">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_17">
     <output url="file://$MODULE_DIR$/../../../../../ext/selenium/target/scala-2.13/classes" />
     <output-test url="file://$MODULE_DIR$/../../../../../ext/selenium/target/scala-2.13/test-classes" />
     <exclude-output />

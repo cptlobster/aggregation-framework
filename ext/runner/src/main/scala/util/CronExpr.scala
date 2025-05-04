@@ -32,9 +32,9 @@ class CronExpr(minute: Option[Int],
 
   /** Check if the numeric values of the crontab are valid. */
   def validate(): Boolean = {
-    minute match { case Some(n) => if (n < 0 || n > 59) { false } }
-    hour match { case Some(n) => if (n < 0 || n > 23) { false } }
-    dayOfMonth match { case Some(n) => if (n < 0 || n > 31) { false } }
+    minute match { case Some(n) => if (n < 0 || n > 59) { return false } }
+    hour match { case Some(n) => if (n < 0 || n > 23) { return false } }
+    dayOfMonth match { case Some(n) => if (n < 0 || n > 31) { return false } }
     month match { case Some(n) => if (n < 0 || n > 12) { return false } }
     dayOfWeek match { case Some(n) => if (n < 0 || n > 7) { return false } }
     true

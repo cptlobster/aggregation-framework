@@ -15,7 +15,9 @@ package dev.cptlobster.aggregation_framework
 package util
 
 import java.time
+import java.time.temporal.TemporalUnit
 import java.time.{Duration, Instant}
+import java.util.concurrent.TimeUnit
 import scala.math.Ordered.orderingToOrdered
 
 /**
@@ -47,7 +49,7 @@ abstract class ExecutionRule() {
    * @return The [[Duration]] until the next execution time; Returns zero if before the next time.
    */
   def timeToNext(current: Instant): Duration = {
-    val duration = next(current).until(current)
+    val duration = Duration.between(current, next(current))
     if (duration >= Duration.ofSeconds(0)) {
       duration
     }

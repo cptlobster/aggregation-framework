@@ -227,7 +227,7 @@ class ScheduledThreadPoolExecutor(threads: Int,
     executor.shutdownNow().asScala.toList
   }
 
-  private def toMillis(time: Instant): Long = Instant.now().until(time).toMillis
+  private def toMillis(time: Instant): Long = Duration.between(Instant.now(), time).toMillis
   private def toMillis(time: Duration): Long = time.toMillis
   private def toMillis(time: Long, unit: TimeUnit): Long = unit.toMillis(time)
 }
