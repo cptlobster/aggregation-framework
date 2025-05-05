@@ -96,7 +96,4 @@ trait DirectoryDatastore[K, V] extends Datastore[K, V] {
       throw new DatastoreReadError(s"$directory either does not exist or is not a directory")
     }
   }
-
-  /** Get the value of the newest record pushed to the database. */
-  def latestValue: V = get(latestKey)
 }
