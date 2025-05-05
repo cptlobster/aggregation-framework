@@ -91,8 +91,13 @@ class DatastorePushError(desc: String) extends DatastoreException(desc) {
   override val message: String = s"Error pushing entry to datastore: $desc"
 }
 
+/** Datastore push error. This should be used if the Consumer fails to push newly read data to the Datastore. */
+class DatastoreReadError(desc: String) extends DatastoreException(desc) {
+  override val message: String = s"Error reading from datastore: $desc"
+}
+
 /** Entry not found in datastore. This should be used if reading from the datastore and the element doesn't exist, or
  * the datastore has no data in it. */
-class DatastoreNotFoundError() extends DatastoreException("") {
+class DatastoreNotFoundError extends DatastoreReadError("") {
   override val message: String = s"Entry not found in datastore, or datastore is empty."
 }
